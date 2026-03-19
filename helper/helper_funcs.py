@@ -1,6 +1,4 @@
-# helper/helper_funcs.py
-
-def parse_iob2(filepath):
+def parse_iob2(filepath, token_col=0, tag_col=1):
     sentences = []
     tokens, tags = [], []
     with open(filepath, encoding="utf-8") as f:
@@ -11,9 +9,10 @@ def parse_iob2(filepath):
                     sentences.append({"tokens": tokens, "ner_tags": tags})
                     tokens, tags = [], []
             else:
-                parts = line.split("\t")  # your files use tab separation
-                tokens.append(parts[0])
-                tags.append(parts[-1])
+                parts = line.split("\t")
+                if len(parts) >= max(token_col, tag_col) + 1:
+                    tokens.append(parts[token_col])
+                    tags.append(parts[tag_col])
     if tokens:
         sentences.append({"tokens": tokens, "ner_tags": tags})
     return sentences
