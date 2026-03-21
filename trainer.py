@@ -20,7 +20,8 @@ import torch
 from tqdm import tqdm
 from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup
-from seqeval.metrics import f1_score, classification_report
+from seqeval.metrics import f1_score, classification_report, precision_score, recall_score
+
 
 from config import ID2LABEL
 
@@ -76,13 +77,15 @@ def evaluate(model, dataloader, device, desc: str = "") -> dict:
     f1       = f1_score(all_labels, all_preds)
     report   = classification_report(all_labels, all_preds, digits=4)
 
+
     return {
         "loss":        avg_loss,
-        "f1":          f1,
-        "report":      report,
-        "predictions": all_preds,   # raw string predictions — use for saving to file
+        "f1":          f1_score(all_labels, all_preds),
+        "precision":   precision_score(all_labels, all_preds),
+        "recall":      recall_score(all_labels, all_preds),
+        "report":      classification_report(all_labels, all_preds, digits=4),
+        "predictions": all_preds,
     }
-
 
 def train(model, train_loader, dev_loader, device, args) -> str:
     """

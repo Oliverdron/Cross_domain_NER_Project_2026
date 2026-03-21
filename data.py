@@ -23,17 +23,18 @@ from config import LABEL_LIST, LABEL2ID, ID2LABEL
 # ── WIESP → EWT coarse label mapping ─────────────────────────────────────────
 # Maps WIESP entity type names to the closest EWT label.
 # Proposal and URL have no equivalent → O.
-WIESP_COARSE = {
-    "Person":                "PER",
-    "Facility":              "ORG",
-    "Observatory":           "ORG",
-    "Mission":               "ORG",
-    "Telescope":             "ORG",
-    "Instrument":            "ORG",
-    "CelestialObject":       "LOC",
-    "CelestialObjectRegion": "LOC",
-    "Region":                "LOC",
-}
+
+# WIESP_COARSE = {
+#     "Person":                "PER",
+#     "Facility":              "ORG",
+#     "Observatory":           "ORG",
+#     "Mission":               "ORG",
+#     "Telescope":             "ORG",
+#     "Instrument":            "ORG",
+#     "CelestialObject":       "LOC",
+#     "CelestialObjectRegion": "LOC",
+#     "Region":                "LOC",
+# }
 
 
 def normalize_tag(tag: str) -> str:
@@ -155,7 +156,7 @@ def make_tokenize_fn(tokenizer, max_length: int):
     Returns a batched map function that:
       1. Tokenises words with BERT's subword tokeniser
       2. Aligns NER labels to subwords (-100 for continuations / special tokens)
-      3. Normalises all tags to the EWT label set
+      3. Normalises all tags to the EWT label set (not now but we may go back to it later)
     """
     def tokenize_and_align_labels(examples):
         tokenized = tokenizer(
@@ -178,8 +179,9 @@ def make_tokenize_fn(tokenizer, max_length: int):
                 elif word_id == prev_word_id:
                     label_ids.append(-100)                          # subword continuation
                 else:
-                    normalized = normalize_tag(tags[word_id])
-                    label_ids.append(LABEL2ID[normalized])          # first subword of word
+                    #normalized = normalize_tag(tags[word_id])
+                    #label_ids.append(LABEL2ID[normalized])          # first subword of word
+                    label_ids.append(LABEL2ID.get(tags[word_id], LABEL2ID["O"]))
 
                 prev_word_id = word_id
 

@@ -103,10 +103,14 @@ def main():
     eval_splits = [
         ("EWT dev (in-domain)",        ewt_dev_loader),
         ("CoNLL-2003 dev (similar)",   conll_dev_loader),
-        ("CoNLL-2003 test (similar)",  conll_test_loader),
         ("WIESP-2022 dev (different)", wiesp_dev_loader),
-        ("WIESP-2022 test (different)",wiesp_test_loader),
     ]
+
+    if args.final_eval:
+        eval_splits += [
+            ("CoNLL-2003 test (similar)",   conll_test_loader),
+            ("WIESP-2022 test (different)", wiesp_test_loader),
+        ]
 
     from seqeval.metrics import precision_score, recall_score, f1_score
     from config import ID2LABEL
