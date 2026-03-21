@@ -4,15 +4,12 @@ import argparse
 # EWT (Universal NER) label set — fixed, model always trained against these 7 labels.
 # CoNLL MISC → O, WIESP domain types → coarse PER/ORG/LOC (handled in data.py)
 LABEL_LIST = [
-    # shared / O
     "O",
-    # EWT + CoNLL
-    "B-LOC", "I-LOC",
-    "B-ORG", "I-ORG",
-    "B-PER", "I-PER",
-    # CoNLL only
-    "B-MISC", "I-MISC",
-    # WIESP
+    # universal — shared concept across all three datasets
+    "B-PER", "I-PER",       # EWT+CoNLL PER, WIESP Person
+    "B-ORG", "I-ORG",       # EWT+CoNLL ORG, WIESP Organization
+    "B-LOC", "I-LOC",       # EWT+CoNLL LOC, WIESP Location
+    # WIESP domain-specific (no equivalent in EWT/CoNLL)
     "B-Archive", "I-Archive",
     "B-CelestialObject", "I-CelestialObject",
     "B-CelestialObjectRegion", "I-CelestialObjectRegion",
@@ -29,13 +26,10 @@ LABEL_LIST = [
     "B-Grant", "I-Grant",
     "B-Identifier", "I-Identifier",
     "B-Instrument", "I-Instrument",
-    "B-Location", "I-Location",
     "B-Mission", "I-Mission",
     "B-Model", "I-Model",
     "B-ObservationalTechniques", "I-ObservationalTechniques",
     "B-Observatory", "I-Observatory",
-    "B-Organization", "I-Organization",
-    "B-Person", "I-Person",
     "B-Proposal", "I-Proposal",
     "B-Software", "I-Software",
     "B-Survey", "I-Survey",
@@ -45,6 +39,7 @@ LABEL_LIST = [
     "B-URL", "I-URL",
     "B-Wavelength", "I-Wavelength",
 ]
+
 LABEL2ID   = {l: i for i, l in enumerate(LABEL_LIST)}
 ID2LABEL   = {i: l for i, l in enumerate(LABEL_LIST)}
 

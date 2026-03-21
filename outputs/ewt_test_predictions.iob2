@@ -1,7 +1,7 @@
 1	What	O	-	-
 2	is	O	-	-
 3	this	O	-	-
-4	Miramar	B-LOC	-	stephen
+4	Miramar	O	-	stephen
 5	?	O	-	-
 
 1	It	O	-	-
@@ -120,7 +120,7 @@
 5	Tea	O	-	-
 6	?	O	-	-
 
-1	Green	B-PER	-	-
+1	Green	O	-	-
 
 1	Green	O	-	-
 2	Tea	O	-	-
@@ -175,8 +175,8 @@
 11	the	O	-	-
 12	country	O	-	-
 13	of	O	-	-
-14	HA	B-LOC	-	-
-15	-	I-LOC	-	-
+14	HA	O	-	-
+15	-	O	-	-
 16	ha	O	-	-
 17	!	O	-	-
 
@@ -408,8 +408,8 @@
 5	?	O	-	-
 
 1	The	O	-	-
-2	Hank	B-LOC	-	stephen
-3	Green	I-LOC	-	stephen
+2	Hank	B-ORG	-	stephen
+3	Green	O	-	stephen
 4	I	O	-	-
 5	know	O	-	-
 6	is	O	-	-
@@ -577,7 +577,7 @@
 2	second	O	-	-
 3	.	O	-	-
 
-1	Nacho	O	-	stephen
+1	Nacho	B-ORG	-	stephen
 2	Libre	I-ORG	-	stephen
 3	is	O	-	-
 4	suppose	O	-	-
@@ -1127,7 +1127,7 @@
 13	from	O	-	-
 14	in	O	-	-
 15	Invercargill	B-LOC	-	stephen
-16	New	I-LOC	-	stephen
+16	New	B-LOC	-	stephen
 17	Zealand	I-LOC	-	stephen
 18	?	O	-	-
 
@@ -1161,7 +1161,7 @@
 28	than	O	-	-
 29	mc	O	-	stephen
 30	donald	O	-	stephen
-31	s	I-LOC	-	stephen
+31	s	O	-	stephen
 32	lol	O	-	-
 
 1	Fast	O	-	-
@@ -1180,7 +1180,7 @@
 6	you	O	-	-
 7	eat	O	-	-
 8	McDonald	B-ORG	-	stephen
-9	s	I-LOC	-	stephen
+9	s	I-ORG	-	stephen
 10	ice	O	-	-
 11	cream	O	-	-
 12	?	O	-	-
@@ -1389,7 +1389,7 @@
 26	best	O	-	-
 27	?	O	-	-
 
-1	Red	B-PER	-	stephen
+1	Red	O	-	stephen
 2	Robin	O	-	stephen
 3	.	O	-	-
 
@@ -1404,8 +1404,8 @@
 9	endless	O	-	-
 10	.	O	-	-
 
-1	Fudrucker	O	-	stephen
-2	s	I-LOC	-	stephen
+1	Fudrucker	B-ORG	-	stephen
+2	s	I-ORG	-	stephen
 3	.	O	-	-
 
 1	idk	O	-	-
@@ -1422,8 +1422,8 @@
 5	chain	O	-	-
 6	?	O	-	-
 
-1	Hackney	B-LOC	-	stephen
-2	's	I-LOC	-	stephen
+1	Hackney	B-ORG	-	stephen
+2	's	I-ORG	-	stephen
 3	has	O	-	-
 4	a	O	-	-
 5	great	O	-	-
@@ -1456,15 +1456,15 @@
 8	's	I-LOC	-	stephen
 9	is	O	-	-
 10	Printers	O	-	stephen
-11	'	I-LOC	-	stephen
-12	Row	I-LOC	-	stephen
+11	'	O	-	stephen
+12	Row	O	-	stephen
 13	:	O	-	-
 
 1	http://www.hackneysprintersrow.net/	O	-	-
 
 1	See	O	-	-
 2	what	O	-	-
-3	DD	B-ORG	-	-
+3	DD	B-PER	-	-
 4	&	O	-	-
 5	D	O	-	-
 6	showed	O	-	-
@@ -1561,7 +1561,7 @@
 14	to	O	-	-
 15	Andiamo	B-LOC	-	stephen
 16	s	I-LOC	-	stephen
-17	restaurant	O	-	-
+17	restaurant	I-LOC	-	-
 18	for	O	-	-
 19	dinner	O	-	-
 20	?	O	-	-
@@ -1704,7 +1704,7 @@
 12	ride	O	-	-
 13	on	O	-	-
 14	the	O	-	-
-15	Metra	B-ORG	-	-
+15	Metra	O	-	-
 16	system	O	-	-
 17	or	O	-	-
 18	the	O	-	-
@@ -1852,12 +1852,12 @@
 1	Well	O	-	-
 2	there	O	-	-
 3	s	O	-	-
-4	Mc.	B-LOC	-	stephen
-5	Donald	I-LOC	-	stephen
-6	s	I-LOC	-	stephen
+4	Mc.	B-ORG	-	stephen
+5	Donald	I-ORG	-	stephen
+6	s	I-ORG	-	stephen
 7	,	O	-	-
-8	Taco	B-LOC	-	stephen
-9	Bell	I-LOC	-	stephen
+8	Taco	B-ORG	-	stephen
+9	Bell	I-ORG	-	stephen
 10	,	O	-	-
 11	Burger	B-ORG	-	stephen
 12	King	I-ORG	-	stephen
@@ -1898,13 +1898,13 @@
 2	what	O	-	-
 3	?	O	-	-
 
-1	Loop	O	-	stephen
+1	Loop	B-LOC	-	stephen
 2	,	O	-	-
-3	North	O	-	stephen
-4	Side	O	-	stephen
+3	North	B-LOC	-	stephen
+4	Side	I-LOC	-	stephen
 5	,	O	-	-
-6	South	O	-	stephen
-7	Side	O	-	stephen
+6	South	B-LOC	-	stephen
+7	Side	I-LOC	-	stephen
 8	,	O	-	-
 9	near	O	-	-
 10	suburbs	O	-	-
@@ -2082,7 +2082,7 @@
 
 1	That	O	-	-
 2	is	O	-	-
-3	Flat	B-LOC	-	stephen
+3	Flat	O	-	stephen
 4	Top	I-LOC	-	stephen
 5	Grill	I-LOC	-	stephen
 
@@ -2319,7 +2319,7 @@
 2	thing	O	-	-
 3	about	O	-	-
 4	The	O	-	stephen
-5	Script	I-ORG	-	stephen
+5	Script	O	-	stephen
 6	is	O	-	-
 7	they	O	-	-
 8	do	O	-	-
@@ -2360,8 +2360,8 @@
 19	Cinema	I-ORG	-	stephen
 20	Club	I-ORG	-	stephen
 21	and	O	-	-
-22	Wallis	B-ORG	-	stephen
-23	Bird	I-ORG	-	stephen
+22	Wallis	B-PER	-	stephen
+23	Bird	I-PER	-	stephen
 24	.	O	-	-
 
 1	I	O	-	-
@@ -2431,13 +2431,13 @@
 12	stick	O	-	-
 13	?	O	-	-
 
-1	Cotton	O	-	-
+1	Cotton	B-PER	-	-
 2	Candy	O	-	-
 
 1	Corn	O	-	-
 2	Dog	O	-	-
 
-1	Candy	O	-	-
+1	Candy	B-PER	-	-
 2	Apple	O	-	-
 
 1	Meat	O	-	-
@@ -2532,7 +2532,7 @@
 11	WW	O	-	-
 12	II	O	-	-
 13	the	O	-	-
-14	Viet	O	-	-
+14	Viet	B-LOC	-	-
 15	Minh	I-LOC	-	-
 16	were	O	-	-
 17	in	O	-	-
@@ -2575,7 +2575,7 @@
 4	check	O	-	-
 5	out	O	-	-
 6	the	O	-	-
-7	French	B-LOC	-	-
+7	French	O	-	-
 8	Indochina	I-LOC	-	stephen
 9	War	O	-	-
 10	(	O	-	-
@@ -2695,10 +2695,10 @@
 12	a	O	-	-
 13	young	O	-	-
 14	sheep	O	-	-
-15	Herder	O	-	-
+15	Herder	B-PER	-	-
 16	,	O	-	-
 17	the	O	-	-
-18	Michelangelo	O	-	stephen
+18	Michelangelo	B-PER	-	stephen
 19	is	O	-	-
 20	the	O	-	-
 21	grown	O	-	-
@@ -2883,8 +2883,8 @@
 
 1	as	O	-	-
 2	R	B-PER	-	-
-3	-	O	-	-
-4	G	O	-	-
+3	-	I-PER	-	-
+4	G	I-PER	-	-
 5	said	O	-	-
 6	,	O	-	-
 7	there	O	-	-
@@ -3115,8 +3115,8 @@
 9	,	O	-	-
 10	i	O	-	-
 11	recommend	O	-	-
-12	Hakka	O	-	stephen
-13	Restaurant	O	-	stephen
+12	Hakka	B-ORG	-	stephen
+13	Restaurant	I-LOC	-	stephen
 14	for	O	-	-
 15	chinese	O	-	-
 16	food	O	-	-
@@ -3383,8 +3383,8 @@
 10	number	O	-	-
 11	.	O	-	-
 
-1	Atal	O	-	stephen
-2	Pharmacy	I-LOC	-	stephen
+1	Atal	B-LOC	-	stephen
+2	Pharmacy	I-ORG	-	stephen
 3	,	O	-	-
 4	Karol	B-LOC	-	stephen
 5	Bag	I-LOC	-	stephen
@@ -3429,7 +3429,7 @@
 4	think	O	-	-
 5	of	O	-	-
 6	Air	B-ORG	-	stephen
-7	France	I-LOC	-	stephen
+7	France	I-ORG	-	stephen
 8	?	O	-	-
 
 1	I	O	-	-
@@ -3495,7 +3495,7 @@
 1	expensive	O	-	-
 
 1	USPS	B-ORG	-	stephen
-2	Delivery	O	-	-
+2	Delivery	I-ORG	-	-
 3	in	O	-	-
 4	Auckland	B-LOC	-	stephen
 5	,	O	-	-
@@ -3506,7 +3506,7 @@
 2	have	O	-	-
 3	ordered	O	-	-
 4	Bose	B-ORG	-	stephen
-5	Headfones	O	-	-
+5	Headfones	I-ORG	-	-
 6	worth	O	-	-
 7	300	O	-	-
 8	USD	O	-	-
@@ -3519,9 +3519,9 @@
 5	using	O	-	-
 6	USPS	B-ORG	-	stephen
 7	Priority	O	-	-
-8	Mail	O	-	-
-9	International	O	-	-
-10	Parcels	O	-	-
+8	Mail	I-ORG	-	-
+9	International	I-ORG	-	-
+10	Parcels	I-ORG	-	-
 11	.	O	-	-
 
 1	will	O	-	-
@@ -4328,7 +4328,7 @@
 3	.	O	-	-
 
 1	tttthhhhh	O	-	-
-2	Madonna	O	-	stephen
+2	Madonna	B-PER	-	stephen
 3	!	O	-	-
 
 1	Which	O	-	-
@@ -4456,7 +4456,7 @@
 1	I	O	-	-
 2	have	O	-	-
 3	the	O	-	-
-4	HTC	O	-	-
+4	HTC	B-ORG	-	-
 5	Evo	O	-	-
 6	.	O	-	-
 
@@ -4793,7 +4793,7 @@
 
 1	weather	O	-	-
 2	in	O	-	-
-3	december	O	-	-
+3	december	B-LOC	-	-
 4	in	O	-	-
 5	Tremblant	B-LOC	-	stephen
 6	?	O	-	-
@@ -4922,7 +4922,7 @@
 3	goes	O	-	-
 4	to	O	-	-
 5	the	O	-	-
-6	Phils	B-LOC	-	stephen
+6	Phils	O	-	stephen
 7	every	O	-	-
 8	6	O	-	-
 9	months	O	-	-
@@ -5587,7 +5587,7 @@
 1	Look	O	-	-
 2	on	O	-	-
 3	the	O	-	-
-4	debenhams	O	-	stephen
+4	debenhams	B-ORG	-	stephen
 5	website	O	-	-
 
 1	in	O	-	-
@@ -6121,8 +6121,8 @@
 12	of	O	-	-
 13	experience	O	-	-
 14	with	O	-	-
-15	Toxic	O	-	-
-16	Tort	O	-	-
+15	Toxic	B-ORG	-	-
+16	Tort	I-ORG	-	-
 17	to	O	-	-
 18	complement	O	-	-
 19	your	O	-	-
@@ -6207,7 +6207,7 @@
 11	I	O	-	-
 12	know	O	-	-
 13	at	O	-	-
-14	ENE	B-ORG	-	stephen
+14	ENE	O	-	stephen
 15	.	O	-	-
 
 1	I	O	-	-
@@ -6249,7 +6249,7 @@
 4	some	O	-	-
 5	friends	O	-	-
 6	at	O	-	-
-7	Duke	B-LOC	-	stephen
+7	Duke	B-ORG	-	stephen
 8	and	O	-	-
 9	Dynegy	B-ORG	-	stephen
 10	from	O	-	-
@@ -6541,7 +6541,7 @@
 15	ride	O	-	-
 16	back	O	-	-
 17	with	O	-	-
-18	Anil	O	-	stephen
+18	Anil	B-PER	-	stephen
 19	.	O	-	-
 
 1	I	O	-	-
@@ -6590,7 +6590,7 @@
 2	02:29	O	-	-
 3	PM	O	-	-
 
-1	Daren	O	-	stephen
+1	Daren	B-PER	-	stephen
 2	,	O	-	-
 
 1	I	O	-	-
@@ -6788,7 +6788,7 @@
 6	had	O	-	-
 7	20.000	O	-	-
 8	at	O	-	-
-9	LS	O	-	-
+9	LS	B-LOC	-	-
 10	HPL	O	-	-
 11	for	O	-	-
 12	the	O	-	-
@@ -6802,7 +6802,7 @@
 3	,	O	-	-
 4	2000	O	-	-
 
-1	Teco	O	-	-
+1	Teco	B-ORG	-	-
 2	Tap	O	-	-
 3	108.333	O	-	-
 4	/	O	-	-
@@ -6813,9 +6813,9 @@
 9	/	O	-	-
 10	Enron	B-ORG	-	stephen
 
-1	LS	O	-	-
-2	HPL	O	-	-
-3	LSK	O	-	-
+1	LS	B-PER	-	-
+2	HPL	I-PER	-	-
+3	LSK	I-PER	-	-
 4	IC	O	-	-
 5	20.000	O	-	-
 6	/	O	-	-
@@ -6826,7 +6826,7 @@
 3	,	O	-	-
 4	2000	O	-	-
 
-1	Teco	O	-	-
+1	Teco	B-ORG	-	-
 2	Tap	O	-	-
 3	85.000	O	-	-
 4	/	O	-	-
@@ -6837,9 +6837,9 @@
 9	/	O	-	-
 10	Enron	B-ORG	-	stephen
 
-1	LS	O	-	-
-2	HPL	O	-	-
-3	LSK	O	-	-
+1	LS	B-PER	-	-
+2	HPL	I-PER	-	-
+3	LSK	I-PER	-	-
 4	IC	O	-	-
 5	20.000	O	-	-
 6	/	O	-	-
@@ -6850,7 +6850,7 @@
 3	,	O	-	-
 4	2000	O	-	-
 
-1	Teco	O	-	-
+1	Teco	B-ORG	-	-
 2	Tap	O	-	-
 3	32.500	O	-	-
 4	/	O	-	-
@@ -7026,7 +7026,7 @@
 10	Technologies	I-ORG	-	stephen
 11	17611	O	-	-
 12	Loring	B-LOC	-	-
-13	Lane	I-LOC	-	-
+13	Lane	O	-	-
 14	,	O	-	-
 15	Spring	B-LOC	-	stephen
 16	,	O	-	-
@@ -7288,14 +7288,14 @@
 3	Belle	I-PER	-	stephen
 4	Consultant	O	-	-
 5	PHB	B-PER	-	stephen
-6	Hagler	O	-	stephen
-7	Bailly	I-ORG	-	stephen
+6	Hagler	I-PER	-	stephen
+7	Bailly	I-PER	-	stephen
 8	MANAGEMENT	O	-	-
 9	AND	O	-	-
 10	ECONOMIC	O	-	-
 11	CONSULTANTS	O	-	-
 12	PHB	O	-	stephen
-13	Hagler	I-ORG	-	stephen
+13	Hagler	I-PER	-	stephen
 14	Bailly	I-ORG	-	stephen
 15	,	I-ORG	-	stephen
 16	Inc.	I-ORG	-	stephen
@@ -7466,16 +7466,16 @@
 1	Sheridan	B-PER	-	stephen
 2	Titman	I-PER	-	stephen
 3	Department	O	-	-
-4	of	I-ORG	-	-
-5	Finance	I-ORG	-	-
-6	College	I-ORG	-	-
+4	of	O	-	-
+5	Finance	O	-	-
+6	College	O	-	-
 7	of	I-ORG	-	-
 8	Business	I-ORG	-	-
 9	Administration	I-ORG	-	-
 10	University	B-ORG	-	stephen
 11	of	I-ORG	-	stephen
 12	Texas	I-ORG	-	stephen
-13	Austin	I-ORG	-	stephen
+13	Austin	I-LOC	-	stephen
 14	,	O	-	-
 15	Texas	B-LOC	-	stephen
 16	78712-1179	O	-	-
@@ -7595,8 +7595,8 @@
 12	the	O	-	-
 13	Canadian	O	-	-
 14	Risk	O	-	-
-15	Managers	O	-	-
-16	Conference	O	-	-
+15	Managers	I-ORG	-	-
+16	Conference	I-ORG	-	-
 17	in	O	-	-
 18	Edmonton	B-LOC	-	stephen
 19	in	O	-	-
@@ -7646,7 +7646,7 @@
 1	Mike	B-PER	-	stephen
 
 1	-	O	-	-
-2	Cfoforum.ppt	O	-	-
+2	Cfoforum.ppt	B-ORG	-	-
 
 1	Darrell	B-PER	-	stephen
 2	,	O	-	-
@@ -7756,7 +7756,7 @@
 2	Duffie	I-PER	-	stephen
 3	mail	O	-	-
 4	GSB	O	-	-
-5	Stanford	B-LOC	-	stephen
+5	Stanford	B-ORG	-	stephen
 6	CA	B-LOC	-	stephen
 7	94305-5015	O	-	-
 8	USA	B-LOC	-	stephen
@@ -8086,7 +8086,7 @@
 4	Goldman	B-ORG	-	stephen
 5	Sachs	I-ORG	-	stephen
 6	Credit	O	-	stephen
-7	Risk	I-ORG	-	stephen
+7	Risk	O	-	stephen
 8	Management	O	-	stephen
 9	&	O	-	stephen
 10	Advisory	O	-	stephen
@@ -8146,7 +8146,7 @@
 4	Goldman	B-ORG	-	stephen
 5	Sachs	I-ORG	-	stephen
 6	Credit	O	-	stephen
-7	Risk	I-ORG	-	stephen
+7	Risk	O	-	stephen
 8	Management	O	-	stephen
 9	&	O	-	stephen
 10	Advisory	O	-	stephen
@@ -8232,14 +8232,14 @@
 5	Due	O	-	-
 6	Today	O	-	-
 
-1	Kinder	B-PER	-	stephen
-2	Morgan	I-PER	-	stephen
+1	Kinder	B-ORG	-	stephen
+2	Morgan	I-ORG	-	stephen
 3	$	O	-	-
 4	3,500,000	O	-	-
 5	$	O	-	-
 6	1,250,000	O	-	-
 
-1	AEP	B-ORG	-	stephen
+1	AEP	O	-	stephen
 2	$	O	-	-
 3	19,250,000	O	-	-
 4	$	O	-	-
@@ -8287,7 +8287,7 @@
 4	the	O	-	-
 5	word	O	-	-
 6	from	O	-	-
-7	Lavo	B-ORG	-	stephen
+7	Lavo	B-PER	-	stephen
 8	we	O	-	-
 9	'll	O	-	-
 10	let	O	-	-
@@ -8510,8 +8510,8 @@
 
 1	Jeff	B-PER	-	stephen
 
-1	WT	B-PER	-	-
-2	Cal	B-PER	-	-
+1	WT	O	-	-
+2	Cal	O	-	-
 3	has	O	-	-
 4	been	O	-	-
 5	added	O	-	-
@@ -8975,7 +8975,7 @@
 3	go	O	-	-
 4	...	O	-	-
 
-1	AC	B-PER	-	stephen
+1	AC	B-ORG	-	stephen
 
 1	Sanjeev	B-PER	-	stephen
 2	,	O	-	-
@@ -9362,7 +9362,7 @@
 27	if	O	-	-
 28	Rohan	B-PER	-	stephen
 29	"	I-PER	-	stephen
-30	Alabama	I-LOC	-	stephen
+30	Alabama	B-LOC	-	stephen
 31	"	I-PER	-	stephen
 32	Davey	I-PER	-	stephen
 33	shows	O	-	-
@@ -9846,7 +9846,7 @@
 11	have	O	-	-
 12	assurances	O	-	-
 13	from	O	-	-
-14	Phillips	B-PER	-	stephen
+14	Phillips	B-ORG	-	stephen
 15	regarding	O	-	-
 16	performance	O	-	-
 17	.	O	-	-
@@ -10146,7 +10146,7 @@
 8	of	O	-	-
 9	'74	O	-	-
 10	the	O	-	-
-11	Dow	B-ORG	-	-
+11	Dow	O	-	-
 12	had	O	-	-
 13	sunk	O	-	-
 14	to	O	-	-
@@ -10167,7 +10167,7 @@
 7	and	O	-	-
 8	geniuses	O	-	-
 9	of	O	-	-
-10	Wall	O	-	-
+10	Wall	B-LOC	-	-
 11	Street	O	-	-
 12	were	O	-	-
 13	predicting	O	-	-
@@ -10232,8 +10232,8 @@
 18	they	O	-	-
 19	had	O	-	-
 20	left	O	-	-
-21	Wall	O	-	-
-22	Street	O	-	-
+21	Wall	B-LOC	-	-
+22	Street	I-LOC	-	-
 23	,	O	-	-
 24	many	O	-	-
 25	for	O	-	-
@@ -10468,7 +10468,7 @@
 42	Wilson	I-PER	-	stephen
 43	received	O	-	-
 44	from	O	-	-
-45	MIPS	B-ORG	-	-
+45	MIPS	O	-	-
 46	.	O	-	-
 
 1	To	O	-	-
@@ -10550,7 +10550,7 @@
 7	ticket	O	-	-
 8	for	O	-	-
 9	the	O	-	-
-10	Comets	B-ORG	-	stephen
+10	Comets	O	-	stephen
 11	game	O	-	-
 12	on	O	-	-
 13	Sat.	O	-	-
@@ -10591,7 +10591,7 @@
 6	my	O	-	-
 7	girlfriends	O	-	-
 8	from	O	-	-
-9	LJ	B-ORG	-	-
+9	LJ	O	-	-
 10	.	O	-	-
 
 1	Debra	B-PER	-	stephen
@@ -10617,7 +10617,7 @@
 8	comments	O	-	-
 9	.	O	-	-
 
-1	dp	O	-	stephen
+1	dp	B-PER	-	stephen
 
 1	Could	O	-	-
 2	one	O	-	-
@@ -10720,7 +10720,7 @@
 3	pass	O	-	-
 4	on	O	-	-
 5	the	O	-	-
-6	Comets	B-ORG	-	stephen
+6	Comets	O	-	stephen
 7	game	O	-	-
 8	.	O	-	-
 
@@ -10817,7 +10817,7 @@
 7	ticket	O	-	-
 8	for	O	-	-
 9	the	O	-	-
-10	Comets	B-ORG	-	stephen
+10	Comets	O	-	stephen
 11	game	O	-	-
 12	on	O	-	-
 13	Sat.	O	-	-
@@ -10858,7 +10858,7 @@
 6	my	O	-	-
 7	girlfriends	O	-	-
 8	from	O	-	-
-9	LJ	B-ORG	-	-
+9	LJ	O	-	-
 10	.	O	-	-
 
 1	Debra	B-PER	-	stephen
@@ -10922,7 +10922,7 @@
 3	pass	O	-	-
 4	on	O	-	-
 5	the	O	-	-
-6	Comets	B-ORG	-	stephen
+6	Comets	O	-	stephen
 7	game	O	-	-
 8	.	O	-	-
 
@@ -11257,16 +11257,16 @@
 14	in	O	-	-
 15	support	O	-	-
 16	of	O	-	-
-17	EPMI	B-ORG	-	-
+17	EPMI	O	-	-
 18	's	O	-	-
 19	obligations	O	-	-
 20	under	O	-	-
 21	the	O	-	-
 22	Indian	B-ORG	-	-
-23	Mesa	I-ORG	-	-
+23	Mesa	O	-	-
 24	II	O	-	-
 25	Renewable	O	-	-
-26	Energy	I-ORG	-	-
+26	Energy	O	-	-
 27	Purchase	O	-	-
 28	Agreement	O	-	-
 29	(	O	-	-
@@ -11296,7 +11296,7 @@
 8	against	O	-	-
 9	the	O	-	-
 10	Enron	B-ORG	-	stephen
-11	EPC	I-ORG	-	-
+11	EPC	O	-	-
 12	Contract	O	-	-
 13	guaranty	O	-	-
 14	in	O	-	-
@@ -11311,10 +11311,10 @@
 23	connection	O	-	-
 24	with	O	-	-
 25	our	O	-	-
-26	Cabazon	B-ORG	-	-
-27	Wind	I-ORG	-	-
+26	Cabazon	B-LOC	-	-
+27	Wind	I-LOC	-	-
 28	Power	I-ORG	-	-
-29	Project	O	-	-
+29	Project	I-LOC	-	-
 30	(	O	-	-
 31	the	O	-	-
 32	project	O	-	-
@@ -11326,7 +11326,7 @@
 38	)	O	-	-
 39	and	O	-	-
 40	the	O	-	-
-41	GPSA	B-ORG	-	-
+41	GPSA	O	-	-
 42	guaranty	O	-	-
 43	is	O	-	-
 44	blacklined	O	-	-
@@ -11560,7 +11560,7 @@
 14	England	I-ORG	-	stephen
 15	Inc.	I-ORG	-	stephen
 16	One	O	-	-
-17	Sullivan	O	-	-
+17	Sullivan	B-LOC	-	-
 18	Road	O	-	-
 19	Holyoke	B-LOC	-	stephen
 20	,	O	-	-
@@ -11887,7 +11887,7 @@
 10	.	O	-	-
 
 1	Holland	B-PER	-	stephen
-2	&	O	-	stephen
+2	&	I-PER	-	stephen
 3	Hart	I-PER	-	stephen
 4	,	O	-	stephen
 5	LLP	O	-	stephen
@@ -11903,7 +11903,7 @@
 4	&	I-ORG	-	stephen
 5	Associates	I-ORG	-	stephen
 6	,	O	-	stephen
-7	PC	B-LOC	-	stephen
+7	PC	O	-	stephen
 8	;	O	-	-
 9	#	O	-	-
 10	10461	O	-	-
@@ -12102,8 +12102,8 @@
 3	forward	O	-	-
 4	the	O	-	-
 5	draft	O	-	-
-6	Bear	B-ORG	-	stephen
-7	Stearns	I-ORG	-	stephen
+6	Bear	O	-	stephen
+7	Stearns	O	-	stephen
 8	term	O	-	-
 9	sheet	O	-	-
 10	separately	O	-	-
@@ -12639,7 +12639,7 @@
 23	"	O	-	-
 
 1	~	O	-	-
-2	CGoehring	O	-	-
+2	CGoehring	B-PER	-	-
 
 1	Email	O	-	-
 2	:	O	-	-
@@ -12833,7 +12833,7 @@
 2	Deb	B-PER	-	stephen
 3	Price	I-PER	-	stephen
 4	/	O	-	-
-5	The	O	-	stephen
+5	The	B-ORG	-	stephen
 6	Detroit	B-ORG	-	stephen
 7	News	I-ORG	-	stephen
 
@@ -13037,7 +13037,7 @@
 2	Twinkle	O	-	-
 3	lazy	O	-	-
 4	star	O	-	-
-5	Kitna	B-PER	-	-
+5	Kitna	O	-	-
 6	soyega	O	-	-
 7	uthja	O	-	-
 8	yaar	O	-	-
@@ -13171,7 +13171,7 @@
 8	was	O	-	-
 9	arrested	O	-	-
 10	in	O	-	-
-11	Indian	B-LOC	-	-
+11	Indian	O	-	-
 12	-	O	-	-
 13	administered	O	-	-
 14	Kashmir	B-LOC	-	stephen
@@ -13186,7 +13186,7 @@
 23	-	I-ORG	-	stephen
 24	Toiba	I-ORG	-	stephen
 25	militant	O	-	-
-26	group	O	-	-
+26	group	I-ORG	-	-
 27	.	O	-	-
 
 1	The	O	-	stephen
@@ -13344,7 +13344,7 @@
 25	.	O	-	-
 
 1	-	O	-	-
-2	Socrates	O	-	stephen
+2	Socrates	B-PER	-	stephen
 
 1	------	O	-	-
 
@@ -13683,11 +13683,11 @@
 21	including	O	-	-
 22	Gemology	O	-	-
 23	,	O	-	-
-24	Feng	O	-	-
-25	Shui	O	-	-
+24	Feng	B-PER	-	-
+25	Shui	I-PER	-	-
 26	/	O	-	-
-27	Vaastu	O	-	-
-28	Shastra	O	-	-
+27	Vaastu	B-PER	-	-
+28	Shastra	I-PER	-	-
 29	.	O	-	-
 
 1	We	O	-	-
@@ -13727,7 +13727,7 @@
 6	THE	O	-	-
 7	RELEASE	O	-	-
 8	OF	O	-	-
-9	RAGNAROK	B-PER	-	-
+9	RAGNAROK	O	-	-
 10	ONLINE	O	-	-
 11	2	O	-	-
 12	(	O	-	-
@@ -13772,7 +13772,7 @@
 51	it	O	-	-
 52	here	O	-	-
 53	^^	O	-	-
-54	GameSpot	B-ORG	-	stephen
+54	GameSpot	O	-	stephen
 
 1	By	O	-	-
 2	the	O	-	-
@@ -13982,8 +13982,8 @@
 11	s	O	-	-
 12	Club	O	-	-
 13	/	O	-	-
-14	Carte	O	-	-
-15	Blanche	I-LOC	-	-
+14	Carte	B-LOC	-	-
+15	Blanche	O	-	-
 16	,	O	-	-
 17	&	O	-	-
 18	Personal	O	-	-
@@ -14543,12 +14543,12 @@
 30	on	O	-	-
 31	the	O	-	-
 32	Action	B-ORG	-	-
-33	Network	O	-	-
+33	Network	I-ORG	-	-
 34	site	O	-	-
 35	.	O	-	-
 
 1	Action	B-ORG	-	-
-2	Network	O	-	-
+2	Network	I-ORG	-	-
 3	is	O	-	-
 4	also	O	-	-
 5	a	O	-	-
@@ -14658,7 +14658,7 @@
 1	**	O	-	-
 
 1	*	O	-	-
-2	Worldwatch	B-ORG	-	stephen
+2	Worldwatch	O	-	stephen
 3	Projects	O	-	-
 4	Catastrophe	O	-	-
 5	Will	O	-	-
@@ -15035,7 +15035,7 @@
 6	group	O	-	-
 7	behind	O	-	-
 8	the	O	-	-
-9	Wikipedia	O	-	-
+9	Wikipedia	B-ORG	-	-
 10	online	O	-	-
 11	encyclopedia	O	-	-
 12	project	O	-	-
@@ -15060,8 +15060,8 @@
 31	.	O	-	-
 
 1	(	O	-	-
-2	ZD	O	-	stephen
-3	Net	O	-	stephen
+2	ZD	B-ORG	-	stephen
+3	Net	I-ORG	-	stephen
 4	)	O	-	-
 
 1	It	O	-	-
@@ -15117,9 +15117,9 @@
 7	to	O	-	-
 8	counter	O	-	-
 9	Microsoft	B-ORG	-	stephen
-10	Search	O	-	-
+10	Search	I-ORG	-	-
 11	using	O	-	-
-12	Encarta	O	-	stephen
+12	Encarta	B-ORG	-	stephen
 13	(	O	-	-
 14	it's	O	-	-
 15	online	O	-	-
@@ -15258,7 +15258,7 @@
 
 1	Photo	O	-	-
 2	from	O	-	-
-3	Space.com	B-ORG	-	-
+3	Space.com	O	-	-
 
 1	(	O	-	-
 2	Space.com	O	-	-
@@ -15345,7 +15345,7 @@
 16	and	O	-	-
 17	operate	O	-	-
 18	this	O	-	-
-19	Earth	O	-	stephen
+19	Earth	B-LOC	-	stephen
 20	-	O	-	-
 21	Moon	O	-	stephen
 22	highway	O	-	-
@@ -15398,7 +15398,7 @@
 8	.	O	-	-
 
 1	The	O	-	-
-2	Lunar	B-ORG	-	stephen
+2	Lunar	O	-	stephen
 3	Transporatation	I-ORG	-	stephen
 4	Systems	I-ORG	-	stephen
 5	(	O	-	-
@@ -15511,7 +15511,7 @@
 31	for	O	-	-
 32	the	O	-	-
 33	new	O	-	-
-34	Vision	O	-	-
+34	Vision	B-ORG	-	-
 35	for	I-ORG	-	-
 36	Space	I-ORG	-	-
 37	Exploration	I-ORG	-	-
@@ -16038,7 +16038,7 @@
 5	for	O	-	-
 6	the	O	-	-
 7	annual	O	-	-
-8	Asia	B-ORG	-	stephen
+8	Asia	O	-	stephen
 9	-	I-ORG	-	stephen
 10	Pacific	I-ORG	-	stephen
 11	Economic	I-ORG	-	stephen
@@ -16663,7 +16663,7 @@
 6	iphone	O	-	-
 7	upgraded	O	-	-
 8	at	O	-	-
-9	Zion	B-LOC	-	stephen
+9	Zion	O	-	stephen
 10	...	O	-	-
 
 1	Sheer	O	-	-
@@ -17018,7 +17018,7 @@
 4	hospitable	O	-	-
 5	.	O	-	-
 
-1	Edit	O	-	stephen
+1	Edit	B-PER	-	stephen
 2	was	O	-	-
 3	the	O	-	-
 4	best	O	-	-
@@ -17303,7 +17303,7 @@
 
 1	Stick	O	-	-
 2	to	O	-	-
-3	Hop	B-LOC	-	stephen
+3	Hop	O	-	stephen
 4	Hing	I-LOC	-	stephen
 5	,	O	-	-
 6	20	O	-	-
@@ -17577,7 +17577,7 @@
 2	energy	O	-	-
 3	efficiency	O	-	-
 
-1	Compact	B-ORG	-	stephen
+1	Compact	O	-	stephen
 2	's	O	-	-
 3	Corona	O	-	-
 4	dryers	O	-	-
@@ -17894,7 +17894,7 @@
 1	I	O	-	-
 2	refer	O	-	-
 3	to	O	-	-
-4	VNHH	B-ORG	-	stephen
+4	VNHH	O	-	stephen
 5	often	O	-	-
 6	and	O	-	-
 7	love	O	-	-
@@ -18446,7 +18446,7 @@
 6	-	O	-	-
 7	Los	B-LOC	-	stephen
 8	Angeles	I-LOC	-	stephen
-9	Movers	O	-	-
+9	Movers	I-ORG	-	-
 10	,	O	-	-
 11	they	O	-	-
 12	moved	O	-	-
@@ -18506,7 +18506,7 @@
 5	standard	O	-	-
 6	.	O	-	-
 
-1	Fast	O	-	-
+1	Fast	B-ORG	-	-
 2	Service	O	-	-
 3	Called	O	-	-
 4	them	O	-	-
@@ -18536,7 +18536,7 @@
 10	the	O	-	-
 11	Battery	B-LOC	-	stephen
 12	Park	I-LOC	-	stephen
-13	Pest	O	-	-
+13	Pest	I-LOC	-	-
 14	I	O	-	-
 15	'm	O	-	-
 16	enjoying	O	-	-
@@ -18712,7 +18712,7 @@
 3	Ghatkopar	I-PER	-	stephen
 4	Bhatia	I-PER	-	stephen
 5	Mitra	I-PER	-	stephen
-6	Mandal	I-LOC	-	stephen
+6	Mandal	I-PER	-	stephen
 
 1	spoken	O	-	-
 2	english	O	-	-
@@ -19055,8 +19055,8 @@
 2	is	O	-	-
 3	the	O	-	-
 4	worst	O	-	-
-5	Sam	B-LOC	-	stephen
-6	s	I-LOC	-	stephen
+5	Sam	B-PER	-	stephen
+6	s	O	-	stephen
 7	club	O	-	stephen
 8	I	O	-	-
 9	've	O	-	-
@@ -19139,7 +19139,7 @@
 1	This	O	-	-
 2	is	O	-	-
 3	a	O	-	-
-4	Ralph	B-PER	-	stephen
+4	Ralph	O	-	stephen
 5	's	O	-	stephen
 
 1	I	O	-	-
@@ -19371,7 +19371,7 @@
 
 1	Kyle	B-PER	-	stephen
 2	with	O	-	-
-3	Bullwark	B-ORG	-	stephen
+3	Bullwark	B-PER	-	stephen
 
 1	Great	O	-	-
 2	job	O	-	-
@@ -19489,7 +19489,7 @@
 1	kudos	O	-	-
 2	to	O	-	-
 3	Allentown	B-LOC	-	stephen
-4	Post	O	-	stephen
+4	Post	I-LOC	-	stephen
 5	Office	O	-	stephen
 6	staff	O	-	-
 
@@ -19586,7 +19586,7 @@
 4	lower	O	-	-
 5	rating	O	-	-
 6	for	O	-	-
-7	Noonan	B-PER	-	stephen
+7	Noonan	B-ORG	-	stephen
 8	's	O	-	stephen
 9	Liquor	O	-	stephen
 10	,	O	-	-
@@ -19605,7 +19605,7 @@
 
 1	CLH	B-PER	-	stephen
 
-1	Bulwark	O	-	-
+1	Bulwark	B-PER	-	-
 2	regarding	O	-	-
 3	service	O	-	-
 4	by	O	-	-
@@ -19861,7 +19861,7 @@
 3	.	I-PER	-	stephen
 
 1	exelent	O	-	-
-2	Job	O	-	-
+2	Job	B-PER	-	-
 
 1	"	O	-	-
 2	Thank	O	-	-
@@ -20101,8 +20101,8 @@
 3	store	O	-	-
 4	in	O	-	-
 5	the	O	-	-
-6	st.	B-LOC	-	stephen
-7	charles	I-LOC	-	stephen
+6	st.	O	-	stephen
+7	charles	O	-	stephen
 8	mall	I-LOC	-	stephen
 9	.	O	-	-
 
@@ -20165,7 +20165,7 @@
 13	area	O	-	-
 14	but	O	-	-
 15	Family	O	-	stephen
-16	Bagels	I-ORG	-	stephen
+16	Bagels	O	-	stephen
 17	are	O	-	-
 18	nice	O	-	-
 19	people	O	-	-
@@ -20275,7 +20275,7 @@
 1	Thanks	O	-	-
 2	again	O	-	-
 3	,	O	-	-
-4	Directv	O	-	stephen
+4	Directv	B-ORG	-	stephen
 5	.	O	-	-
 
 1	STAY	O	-	-
@@ -20416,8 +20416,8 @@
 6	I	O	-	-
 7	went	O	-	-
 8	to	O	-	-
-9	Mother	B-ORG	-	stephen
-10	Plucker	I-LOC	-	stephen
+9	Mother	O	-	stephen
+10	Plucker	I-PER	-	stephen
 11	,	O	-	-
 12	they	O	-	-
 13	had	O	-	-
@@ -20515,7 +20515,7 @@
 2	thanks	O	-	-
 
 1	Love	O	-	-
-2	Hop	I-LOC	-	stephen
+2	Hop	O	-	stephen
 3	City	I-LOC	-	stephen
 
 1	This	O	-	-
@@ -20607,7 +20607,7 @@
 3	Great	O	-	-
 4	People	O	-	-
 
-1	Bisconti	B-ORG	-	stephen
+1	Bisconti	B-PER	-	stephen
 2	wanted	O	-	-
 3	over	O	-	-
 4	$	O	-	-
@@ -20760,7 +20760,7 @@
 22	condition	O	-	-
 23	.	O	-	-
 
-1	Staten	B-ORG	-	stephen
+1	Staten	B-LOC	-	stephen
 2	Island	I-ORG	-	stephen
 3	Computers	I-ORG	-	stephen
 
@@ -20791,7 +20791,7 @@
 13	stick	O	-	-
 14	with	O	-	-
 15	Qualitech	B-ORG	-	stephen
-16	Computers	O	-	stephen
+16	Computers	I-ORG	-	stephen
 17	!!!	O	-	-
 
 1	teeth	O	-	-
@@ -21202,7 +21202,7 @@
 4	int	O	-	-
 5	he	O	-	-
 6	DFW	B-LOC	-	stephen
-7	fort	I-LOC	-	stephen
+7	fort	B-LOC	-	stephen
 8	Worth	I-LOC	-	stephen
 9	Metro	I-LOC	-	stephen
 10	area	O	-	stephen
@@ -21835,7 +21835,7 @@
 11	.	O	-	-
 
 1	Thanks	O	-	-
-2	Southland	B-ORG	-	stephen
+2	Southland	B-PER	-	stephen
 3	.	O	-	-
 
 1	A	O	-	-
@@ -22247,14 +22247,14 @@
 1	I	O	-	-
 2	was	O	-	-
 3	with	O	-	-
-4	verizon	O	-	stephen
+4	verizon	B-ORG	-	stephen
 5	and	O	-	-
 6	I	O	-	-
 7	checked	O	-	-
 8	my	O	-	-
 9	service	O	-	-
 10	with	O	-	-
-11	tmobile	O	-	stephen
+11	tmobile	B-ORG	-	stephen
 12	and	O	-	-
 13	it	O	-	-
 14	was	O	-	-
@@ -22265,7 +22265,7 @@
 19	I	O	-	-
 20	would	O	-	-
 21	try	O	-	-
-22	tmobile	O	-	stephen
+22	tmobile	B-ORG	-	stephen
 23	.	O	-	-
 
 1	It	O	-	-
@@ -22371,7 +22371,7 @@
 16	American	B-ORG	-	stephen
 17	Pride	I-ORG	-	stephen
 18	Irrigation	I-ORG	-	stephen
-19	&	O	-	stephen
+19	&	I-ORG	-	stephen
 20	Landscaping	I-ORG	-	stephen
 21	again	O	-	-
 22	.	O	-	-
@@ -22409,7 +22409,7 @@
 6	great	O	-	-
 7	quality	O	-	-
 
-1	Tire	O	-	-
+1	Tire	B-PER	-	-
 2	Gooroo	O	-	-
 
 1	David	B-PER	-	stephen
@@ -22488,7 +22488,7 @@
 23	involvement	O	-	-
 24	at	O	-	-
 25	the	O	-	-
-26	D.C.	B-ORG	-	stephen
+26	D.C.	B-LOC	-	stephen
 27	Circuit	I-ORG	-	-
 28	level	O	-	-
 29	and	O	-	-
@@ -22561,7 +22561,7 @@
 40	in	O	-	-
 41	which	O	-	-
 42	KENNEDY	B-PER	-	stephen
-43	,	O	-	-
+43	,	I-PER	-	-
 44	SOUTER	B-PER	-	stephen
 45	,	O	-	-
 46	GINSBURG	B-PER	-	stephen
@@ -22638,7 +22638,7 @@
 23	II	O	-	-
 24	.	O	-	-
 
-1	SCALIA	B-ORG	-	stephen
+1	SCALIA	B-PER	-	stephen
 2	filed	O	-	-
 3	a	O	-	-
 4	dissenting	O	-	-
@@ -22646,7 +22646,7 @@
 6	,	O	-	-
 7	in	O	-	-
 8	which	O	-	-
-9	THOMAS	B-PER	-	stephen
+9	THOMAS	O	-	stephen
 10	and	O	-	-
 11	ALITO	B-PER	-	stephen
 12	joined	O	-	-
@@ -22769,7 +22769,7 @@
 4	)	O	-	-
 5	-	O	-	-
 
-1	U.S.	B-ORG	-	stephen
+1	U.S.	B-LOC	-	stephen
 2	Muslim	O	-	-
 3	groups	O	-	-
 4	criticized	O	-	-
@@ -22875,7 +22875,7 @@
 39	Islamic	I-ORG	-	stephen
 40	Relations	I-ORG	-	stephen
 41	advocacy	O	-	-
-42	group	O	-	-
+42	group	I-ORG	-	-
 43	.	O	-	-
 
 1	Which	O	-	-
@@ -23241,7 +23241,7 @@
 4	19	O	-	-
 5	,	O	-	-
 6	of	O	-	-
-7	Eclipse	B-LOC	-	-
+7	Eclipse	O	-	-
 8	Avenue	I-LOC	-	-
 9	,	O	-	-
 10	Mississauga	B-LOC	-	stephen
@@ -24350,9 +24350,9 @@
 13	to	O	-	-
 14	the	O	-	-
 15	Bill	B-PER	-	stephen
-16	and	I-ORG	-	stephen
-17	Melinda	I-PER	-	stephen
-18	Gates	I-PER	-	stephen
+16	and	O	-	stephen
+17	Melinda	I-ORG	-	stephen
+18	Gates	I-ORG	-	stephen
 19	Foundation	I-ORG	-	stephen
 20	.	O	-	-
 
@@ -24425,7 +24425,7 @@
 16	is	O	-	-
 17	that	O	-	-
 18	the	O	-	-
-19	Gateses	B-PER	-	stephen
+19	Gateses	O	-	stephen
 20	are	O	-	-
 21	very	O	-	-
 22	good	O	-	-
@@ -25016,7 +25016,7 @@
 
 1	What	O	-	-
 2	if	O	-	-
-3	Google	O	-	stephen
+3	Google	B-ORG	-	stephen
 4	Morphed	O	-	-
 5	Into	O	-	-
 6	GoogleOS	O	-	-
@@ -25206,7 +25206,7 @@
 8	commanders	O	-	-
 9	.	O	-	-
 
-1	Falluja	B-PER	-	stephen
+1	Falluja	B-LOC	-	stephen
 2	has	O	-	-
 3	long	O	-	-
 4	been	O	-	-
@@ -25759,8 +25759,8 @@
 11	whale	O	-	-
 12	.	O	-	-
 
-1	Imperial	O	-	-
-2	Hubris	O	-	-
+1	Imperial	B-ORG	-	-
+2	Hubris	I-ORG	-	-
 3	makes	O	-	-
 4	the	O	-	-
 5	case	O	-	-
@@ -26134,12 +26134,12 @@
 6	Monotheism	O	-	-
 7	and	O	-	-
 8	Holy	O	-	-
-9	War	O	-	-
+9	War	I-ORG	-	-
 10	(	O	-	-
-11	al	B-PER	-	-
+11	al	B-ORG	-	-
 12	-	I-ORG	-	-
 13	Tawhid	I-ORG	-	-
-14	wa	I-PER	-	-
+14	wa	I-ORG	-	-
 15	al	I-ORG	-	-
 16	-	I-ORG	-	-
 17	Jihad	I-ORG	-	-
@@ -26155,10 +26155,10 @@
 27	announce	O	-	-
 28	that	O	-	-
 29	the	O	-	-
-30	Tawhid	O	-	-
+30	Tawhid	B-ORG	-	-
 31	and	I-ORG	-	-
-32	Jihad	O	-	-
-33	Group	O	-	-
+32	Jihad	I-ORG	-	-
+33	Group	I-ORG	-	-
 34	,	O	-	-
 35	its	O	-	-
 36	prince	O	-	-
@@ -26228,10 +26228,10 @@
 12	had	O	-	-
 13	not	O	-	-
 14	allowed	O	-	-
-15	Monotheism	O	-	-
+15	Monotheism	B-ORG	-	-
 16	and	O	-	-
-17	Holy	O	-	-
-18	War	O	-	-
+17	Holy	B-ORG	-	-
+18	War	I-ORG	-	-
 19	to	O	-	-
 20	share	O	-	-
 21	resources	O	-	-
@@ -26492,7 +26492,7 @@
 19	coloration	O	-	-
 20	as	O	-	-
 21	mainly	O	-	-
-22	Jordanian	O	-	-
+22	Jordanian	B-LOC	-	-
 23	,	O	-	-
 24	Palestinian	O	-	-
 25	and	O	-	-
@@ -26658,7 +26658,7 @@
 7	crowds	O	-	-
 8	on	O	-	-
 9	Haifa	B-LOC	-	-
-10	Street	O	-	-
+10	Street	I-LOC	-	-
 11	in	O	-	-
 12	Baghdad	B-LOC	-	stephen
 13	and	O	-	-
@@ -26819,7 +26819,7 @@
 27	stance	O	-	-
 28	by	O	-	-
 29	the	O	-	-
-30	Association	B-ORG	-	stephen
+30	Association	I-ORG	-	stephen
 31	of	I-ORG	-	stephen
 32	Muslim	I-ORG	-	stephen
 33	Scholars	I-ORG	-	stephen
@@ -26981,7 +26981,7 @@
 1	The	O	-	-
 2	radical	O	-	-
 3	Shiite	O	-	-
-4	Sadr	O	-	stephen
+4	Sadr	B-ORG	-	stephen
 5	movement	O	-	-
 6	issued	O	-	-
 7	a	O	-	-

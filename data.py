@@ -24,41 +24,30 @@ from config import LABEL_LIST, LABEL2ID, ID2LABEL
 # Maps WIESP entity type names to the closest EWT label.
 # Proposal and URL have no equivalent → O.
 
-# WIESP_COARSE = {
-#     "Person":                "PER",
-#     "Facility":              "ORG",
-#     "Observatory":           "ORG",
-#     "Mission":               "ORG",
-#     "Telescope":             "ORG",
-#     "Instrument":            "ORG",
-#     "CelestialObject":       "LOC",
-#     "CelestialObjectRegion": "LOC",
-#     "Region":                "LOC",
-# }
+UNIFY_MAP = {
+    # WIESP labels that overlap with EWT/CoNLL concepts
+    "B-Person":       "B-PER",
+    "I-Person":       "I-PER",
+    "B-Organization": "B-ORG",
+    "I-Organization": "I-ORG",
+    "B-Location":     "B-LOC",
+    "I-Location":     "I-LOC",
+}
 
 
 def normalize_tag(tag: str) -> str:
     """
-    Map any NER tag to the 7-label EWT label set.
-
+    Normalize a NER tag to the unified label set.
     Rules (in order):
-      1. Already a valid EWT label → keep as-is
-      2. Contains 'MISC' (CoNLL) → O
-      3. Matches a WIESP entity type → coarse B-/I- PER/ORG/LOC
+      1. Unify overlapping labels (WIESP Person/Organization/Location → PER/ORG/LOC)
+      2. Map MISC → O (CoNLL-specific, no equivalent in EWT or WIESP)
+      3. If the tag is in the label set → keep as-is
       4. Anything else → O
     """
-    if tag in LABEL2ID:
-        return tag
-
+    tag = UNIFY_MAP.get(tag, tag)
     if "MISC" in tag:
         return "O"
-
-    for entity_type, coarse in WIESP_COARSE.items():
-        if entity_type in tag:
-            prefix = "B-" if tag.startswith("B-") else "I-"
-            return f"{prefix}{coarse}"
-
-    return "O"
+    return tag if tag in LABEL2ID else "O"
 
 
 # ── Parsing ───────────────────────────────────────────────────────────────────
