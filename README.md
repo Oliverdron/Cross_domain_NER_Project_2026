@@ -32,7 +32,7 @@ pip install transformers datasets torch seqeval evaluate
 
 **Default run (trains for 5 epochs on EWT, evaluates on dev splits):**
 ```bash
-  python main.py [--data_dir data_iob2] [--output_dir outputs] [--epochs 5] ...
+  python main.py [--data_dir data] [--output_dir outputs] [--epochs 5] ...
 ```
 Full argument list: see config.py or run  python main.py --help
 
