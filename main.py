@@ -1,22 +1,3 @@
-"""
-main.py
--------
-Entry point for the cross-domain NER baseline.
-
-Usage:
-    python main.py [--data_dir data_iob2] [--output_dir outputs] [--epochs 5] ...
-
-Full argument list: see config.py or run  python main.py --help
-
-What it does:
-    1. Loads EWT, CoNLL-2003, and WIESP-2022 from local .iob2 files
-    2. Fine-tunes BERT on EWT train, picking the best checkpoint by EWT dev F1
-    3. Evaluates the best model on all dev and test splits
-    4. Saves EWT test predictions to outputs/ewt_test_predictions.iob2
-       (upload this file to LearnIT for official scoring)
-    5. Prints a results table across all six evaluation splits
-"""
-
 import os
 import torch
 from transformers import AutoModelForTokenClassification, AutoTokenizer, set_seed

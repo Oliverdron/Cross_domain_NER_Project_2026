@@ -1,14 +1,3 @@
-"""
-data.py
--------
-Handles everything data-related:
-  - Parsing .iob2 files (EWT 5-col and CoNLL/WIESP 2-col)
-  - Normalising tags from CoNLL/WIESP to the EWT label set
-  - Tokenising and aligning labels to BERT subwords
-  - Building HuggingFace Datasets and PyTorch DataLoaders
-  - Saving EWT test predictions back to .iob2 format
-"""
-
 import os
 from typing import List, Dict, Tuple
 
@@ -19,10 +8,6 @@ from transformers import AutoTokenizer, DataCollatorForTokenClassification
 
 from config import LABEL_LIST, LABEL2ID, ID2LABEL
 
-
-# ── WIESP → EWT coarse label mapping ─────────────────────────────────────────
-# Maps WIESP entity type names to the closest EWT label.
-# Proposal and URL have no equivalent → O.
 
 UNIFY_MAP = {
     # WIESP labels that overlap with EWT/CoNLL concepts
@@ -39,10 +24,10 @@ def normalize_tag(tag: str) -> str:
     """
     Normalize a NER tag to the unified label set.
     Rules (in order):
-      1. Unify overlapping labels (WIESP Person/Organization/Location → PER/ORG/LOC)
-      2. Map MISC → O (CoNLL-specific, no equivalent in EWT or WIESP)
-      3. If the tag is in the label set → keep as-is
-      4. Anything else → O
+      1. Unify overlapping labels (WIESP Person/Organization/Location --> PER/ORG/LOC)
+      2. Map MISC --> O (CoNLL-specific, no equivalent in EWT or WIESP)
+      3. If the tag is in the label set --> keep as-is
+      4. Anything else --> O
     """
     tag = UNIFY_MAP.get(tag, tag)
     if "MISC" in tag:
@@ -207,9 +192,8 @@ def make_dataloader(dataset: Dataset, tokenizer, batch_size: int,
 def save_predictions(sentences: List[Dict], predictions: List[List[str]],
                      output_path: str):
     """
-    Write model predictions to a .iob2 file in the same format as the input,
+    Write model predictions to a .iob2 file,
     replacing the NER tag column with the predicted tag.
-    Compatible with the assignment's span_f1.py evaluation script.
     """
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 

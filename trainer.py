@@ -1,18 +1,3 @@
-"""
-trainer.py
-----------
-Training loop, evaluation, and prediction collection.
-
-Key features (merged from both baselines):
-  - Linear warmup + linear decay scheduler  (from multi-file baseline)
-  - Gradient clipping at 1.0               (from multi-file baseline)
-  - Weight decay via AdamW                 (from multi-file baseline)
-  - Best model checkpoint by dev F1        (from both)
-  - Per-class seqeval report               (from multi-file baseline)
-  - Cross-domain evaluation over all splits (from sam_baseline)
-  - Prediction collection for EWT test     (new)
-"""
-
 import os
 import random
 import numpy as np

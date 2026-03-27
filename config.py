@@ -1,8 +1,6 @@
 import argparse
 
 
-# EWT (Universal NER) label set — fixed, model always trained against these 7 labels.
-# CoNLL MISC → O, WIESP domain types → coarse PER/ORG/LOC (handled in data.py)
 LABEL_LIST = [
     "O",
     # universal — shared concept across all three datasets

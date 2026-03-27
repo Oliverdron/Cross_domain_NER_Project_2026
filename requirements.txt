@@ -1,6 +1,7 @@
 torch
 transformers
 seqeval
-numpy
+numpy<2
 tqdm
+datasets
 scikit-learn
