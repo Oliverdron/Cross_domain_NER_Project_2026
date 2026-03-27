@@ -1,78 +1,98 @@
-# Cross-Domain NER with BERT
+# Cross-Domain NER Baseline
 
-This project implements a cross-domain Named Entity Recognition (NER) system using BERT. It fine-tunes a BERT model on the EWT (English Web Treebank) dataset and evaluates its performance on three different domains: EWT (in-domain), CoNLL-2003 (similar), and WIESP-2022 (different).
+                            ...
 
-## Setup
+## File structure
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd Cross_domain_NER_Project_2026
-    ```
+```
+├── main.py         ← entry point, run this
+├── config.py       ← hyperparameters and label set
+├── data.py         ← parsing, tokenisation, label normalisation, prediction saving
+├── model.py        ← builds the BERT token classification model
+├── trainer.py      ← training loop, evaluation, best-model checkpointing
+└── data/      ← local .iob2 files
+    ├── universal_train.iob2
+    ├── universal_dev.iob2
+    ├── universal_test_masked.iob2
+    ├── news_train.iob2
+    ├── news_dev.iob2
+    ├── news_test.iob2
+    ├── astro_train.iob2
+    ├── astro_dev.iob2
+    └── astro_test.iob2
+```
 
-2.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Installation
+
+```bash
+pip install transformers datasets torch seqeval evaluate
+```
 
 ## Usage
 
-The main entry point is `main.py`. You can run the training and evaluation pipeline with default settings:
-
+**Default run (trains for 5 epochs on EWT, evaluates on dev splits):**
 ```bash
 python main.py
 ```
 
-### Customizing Training
-
-You can customize the training parameters using command-line arguments:
-
+**With custom settings:**
 ```bash
 python main.py \
-  --model_name_or_path bert-base-uncased \
-  --train_dataset ewt \
-  --dev_dataset conll2003 \
-  --test_dataset wiesp \
-  --output_dir ./outputs \
-  --epochs 3 \
-  --lr 2e-5 \
+  --data_dir data \
+  --output_dir outputs \
+  --model_name google-bert/bert-base-cased \
+  --epochs 5 \
   --batch_size 16 \
+  --max_length 256 \
+  --lr 5e-5 \
   --weight_decay 0.01 \
-  --warmup_ratio 0.1
+  --warmup_ratio 0.1 \
+  --seed 42 \
+  --device cuda
 ```
 
-**Available Arguments:**
+**Final evaluation (also runs on test splits — only once at the end):**
+```bash
+python main.py --final_eval
+```
+
+**CPU only:**
+```bash
+python main.py --device cpu
+```
+
+## Arguments
 
 | Argument | Description | Default |
 |----------|-------------|---------|
-| `--model_name_or_path` | Pre-trained model to use | `"bert-base-uncased"` |
-| `--train_dataset` | Training dataset | `"ewt"` |
-| `--dev_dataset` | Development dataset | `"conll2003"` |
-| `--test_dataset` | Test dataset | `"wiesp"` |
-| `--output_dir` | Output directory for checkpoints and predictions | `./outputs` |
+| `--data_dir` | Folder containing all .iob2 files | `data` |
+| `--output_dir` | Where to save the best model and predictions | `outputs` |
+| `--model_name` | Pre-trained model name | `google-bert/bert-base-cased` |
 | `--epochs` | Number of training epochs | `5` |
-| `--lr` | Learning rate | `2e-5` |
 | `--batch_size` | Batch size | `16` |
-| `--weight_decay` | Weight decay | `0.01` |
-| `--warmup_ratio` | Warmup ratio for learning rate scheduler | `0.1` |
+| `--max_length` | Max token sequence length | `256` |
+| `--lr` | Learning rate | `5e-5` |
+| `--weight_decay` | Weight decay for AdamW | `0.01` |
+| `--warmup_ratio` | Fraction of steps used for linear warmup | `0.1` |
+| `--seed` | Random seed | `42` |
+| `--device` | Device to use (`cuda` or `cpu`) | `cuda` |
+| `--final_eval` | Also evaluate on test splits (run once at the end) | `False` |
 
 ## Output
 
-The script will:
-1.  Train the model on the specified training dataset.
-2.  Evaluate on the development dataset after each epoch.
-3.  Save the best model (by dev F1) to `./outputs/best_model`.
-4.  Evaluate the best model on all three datasets (EWT, CoNLL-2003, WIESP-2022).
-5.  Save predictions for the EWT test set to `./outputs/ewt_test_predictions.iob2`.
+| File | Description |
+|------|-------------|
+| `outputs/best_model/` | Best BERT checkpoint selected by EWT dev F1 |
+| `outputs/ewt_test_predictions.iob2` | EWT test predictions — upload to LearnIT for official scoring |
 
 ## Datasets
 
-The project uses the following datasets:
+All three datasets must be placed in `data/` before running.
 
--   **EWT (English Web Treebank):** In-domain training data.
--   **CoNLL-2003:** Similar domain, used for development.
--   **WIESP-2022:** Different domain, used for cross-domain evaluation.
+- **EWT** (`universal_*.iob2`) — English web text (blogs, forums, emails). Source domain. 5-column IOB2 format.
+- **CoNLL-2003** (`news_*.iob2`) — Reuters newswire. Similar domain. 2-column IOB2 format.
+- **WIESP-2022** (`astro_*.iob2`) — Astrophysics paper abstracts. Different domain. 2-column IOB2 format.
 
-## License
+## Label set
 
-This project is for educational purposes as part of the Natural Language and Deep Learning course at ITU.
+The model uses a unified label set combining all three datasets (65 labels). Overlapping labels are merged: WIESP `Person` → `PER`, `Organization` → `ORG`, `Location` → `LOC`. CoNLL `MISC` is mapped to `O` as it has no equivalent in the other datasets.
