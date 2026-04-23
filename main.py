@@ -6,6 +6,8 @@ from config import get_args
 from data import load_all_datasets, prepare_split, make_dataloader, save_predictions
 from model import build_model
 from trainer import set_seed as seed_everything, train, evaluate
+from seqeval.metrics import precision_score, recall_score, f1_score
+from config import ID2LABEL
 
 
 def print_results_table(results: dict):
@@ -15,7 +17,7 @@ def print_results_table(results: dict):
 
     # Compute precision and recall from the seqeval report string
     # (seqeval f1_score only returns F1 — parse report for P/R)
-    from seqeval.metrics import precision_score, recall_score
+    
     for split_name, metrics in results.items():
         print(f"{split_name:<30} {metrics['f1']:>7.4f} "
               f"{metrics.get('precision', 0.0):>10.4f} "
@@ -93,8 +95,6 @@ def main():
             ("WIESP-2022 test (different)", wiesp_test_loader),
         ]
 
-    from seqeval.metrics import precision_score, recall_score, f1_score
-    from config import ID2LABEL
 
     results = {}
     for split_name, loader in eval_splits:

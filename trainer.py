@@ -59,9 +59,6 @@ def evaluate(model, dataloader, device, desc: str = "") -> dict:
             all_labels.extend(labels)
 
     avg_loss = total_loss / max(len(dataloader), 1)
-    f1       = f1_score(all_labels, all_preds)
-    report   = classification_report(all_labels, all_preds, digits=4)
-
 
     return {
         "loss":        avg_loss,

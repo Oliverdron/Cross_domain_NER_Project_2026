@@ -46,7 +46,7 @@ def get_args():
     parser = argparse.ArgumentParser(description="Cross-domain NER baseline")
 
     # ── Paths ──────────────────────────────────────────────────────────────────
-    parser.add_argument("--data_dir",   type=str, default="data_iob2",
+    parser.add_argument("--data_dir",   type=str, default="data",
                         help="Folder containing all .iob2 files")
     parser.add_argument("--output_dir", type=str, default="outputs",
                         help="Where to save the best model and predictions")

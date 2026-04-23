@@ -130,7 +130,7 @@ def make_tokenize_fn(tokenizer, max_length: int):
     Returns a batched map function that:
       1. Tokenises words with BERT's subword tokeniser
       2. Aligns NER labels to subwords (-100 for continuations / special tokens)
-      3. Normalises all tags to the EWT label set
+      3. Normalises all the unified tags to the EWT label set
     """
     def tokenize_and_align_labels(examples):
         tokenized = tokenizer(
