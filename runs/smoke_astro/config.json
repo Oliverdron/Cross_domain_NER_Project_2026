@@ -1,0 +1,73 @@
+{
+  "config": {
+    "_config_path": "/Users/samuel/Desktop/ITU/4th Semester/Natural Language and Deep Learning/NLP_Project/Cross_domain_NER_Project_2026/.claude/worktrees/wonderful-torvalds-23141a/experiments/config_smoke_astro.yaml",
+    "batch_size": 16,
+    "early_stopping_patience": 1,
+    "eval_sets": {
+      "other_target_test": "data/news_test.iob2",
+      "source_test": "data/universal_dev.iob2",
+      "target_test": "data/astro_test.iob2"
+    },
+    "experiment_name": "smoke_astro",
+    "learning_rate": 0.001,
+    "max_seq_len": 128,
+    "model_name": "hf-internal-testing/tiny-random-bert",
+    "num_epochs": 1,
+    "output_dir": "runs",
+    "seeds": [
+      42
+    ],
+    "source": {
+      "dev": "data/universal_dev.iob2",
+      "name": "ewt",
+      "test": "data/universal_test_masked.iob2",
+      "train": "data/universal_train.iob2",
+      "unit": "sentence"
+    },
+    "target": {
+      "dev": "data/astro_dev.iob2",
+      "n_iterations": 2,
+      "name": "astro",
+      "test": "data/astro_test.iob2",
+      "train": "data/astro_train.iob2",
+      "unit": "paragraph",
+      "units_per_step": 2
+    },
+    "tokenizer_name": "hf-internal-testing/tiny-random-bert",
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01
+  },
+  "dataset_hashes": {
+    "eval_other_target_test": "3cac49eb9986ead18a2310761315b1e65f0ec18ebf3be1fe1cdd650ed80852c5",
+    "eval_source_test": "0cafd881cf31d39897b6d588420fab8fbbe4423d271725c59921ac9dd49c0713",
+    "eval_target_test": "0f01e38c47aac61b4e124a6ecd0f7d174744ccec15106ab3f372466084308598",
+    "source_dev": "0cafd881cf31d39897b6d588420fab8fbbe4423d271725c59921ac9dd49c0713",
+    "source_test": "eeb93bebba018b73161e9108de1144f58c5fea6a6bb1b1b5c781f25011c1c8e0",
+    "source_train": "647b296624433d2b0f304f81974404fb1d5ed1520cc05649b4646f5777a5497d",
+    "target_dev": "35fbbcb9ac58af2eea84ab0e860069b2c33b77cf3bd1a58bee148b8a33a9399b",
+    "target_test": "0f01e38c47aac61b4e124a6ecd0f7d174744ccec15106ab3f372466084308598",
+    "target_train": "54740eb08329e8c41631fe21c800e7c0a482e971395bfcb815311fe6a2cd9d41"
+  },
+  "dataset_paths": {
+    "eval_other_target_test": "data/news_test.iob2",
+    "eval_source_test": "data/universal_dev.iob2",
+    "eval_target_test": "data/astro_test.iob2",
+    "source_dev": "data/universal_dev.iob2",
+    "source_test": "data/universal_test_masked.iob2",
+    "source_train": "data/universal_train.iob2",
+    "target_dev": "data/astro_dev.iob2",
+    "target_test": "data/astro_test.iob2",
+    "target_train": "data/astro_train.iob2"
+  },
+  "experiment_name": "smoke_astro",
+  "git_commit": "788d844b4f4441420f261d907ff41fe0ff4e8adc",
+  "machine": {
+    "cuda_available": "False",
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "python": "3.9.6",
+    "torch": "2.8.0"
+  },
+  "started_at": "2026-04-27T10:16:42.937917Z",
+  "tokenizer_name": "hf-internal-testing/tiny-random-bert",
+  "transformers_version": "4.57.6"
+}

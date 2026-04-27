@@ -1,0 +1,37 @@
+# Iterative cross-domain NER — Target A (CoNLL-2003 / news)
+experiment_name: targetA_conll
+output_dir: runs
+
+seeds: [42, 1337, 2024]
+
+# Model / training (defaults match the baseline)
+model_name: google-bert/bert-base-cased
+tokenizer_name: google-bert/bert-base-cased
+max_seq_len: 256
+batch_size: 16
+learning_rate: 5.0e-5
+num_epochs: 5
+early_stopping_patience: 2
+warmup_ratio: 0.1
+weight_decay: 0.01
+
+source:
+  name: ewt
+  train: data/universal_train.iob2
+  dev:   data/universal_dev.iob2
+  test:  data/universal_test_masked.iob2
+  unit: sentence
+
+target:
+  name: conll
+  train: data/news_train.iob2
+  dev:   data/news_dev.iob2
+  test:  data/news_test.iob2
+  unit: sentence
+  units_per_step: 200       # 200 CoNLL sentences per iteration step
+  n_iterations: 8           # 0, 200, 400, …, 1400 examples (0 == source-only baseline)
+
+eval_sets:
+  source_test: data/universal_dev.iob2     # EWT test is masked, use dev as proxy
+  target_test: data/news_test.iob2
+  other_target_test: data/astro_test.iob2  # cross-domain probe

@@ -1,0 +1,230 @@
+{
+  "other_target_test": {
+    "LOC": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 1557
+    },
+    "ORG": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 1566
+    },
+    "PER": {
+      "f1": 0.00865332612222823,
+      "precision": 0.02318840579710145,
+      "recall": 0.005319148936170213,
+      "support": 1504
+    }
+  },
+  "source_test": {
+    "LOC": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 376
+    },
+    "ORG": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 204
+    },
+    "PER": {
+      "f1": 0.15346534653465344,
+      "precision": 0.44285714285714284,
+      "recall": 0.09281437125748503,
+      "support": 334
+    }
+  },
+  "target_test": {
+    "Archive": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 28
+    },
+    "CelestialObject": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 181
+    },
+    "CelestialObjectRegion": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 30
+    },
+    "CelestialRegion": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 8
+    },
+    "Citation": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 491
+    },
+    "Collaboration": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 20
+    },
+    "ComputingFacility": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 37
+    },
+    "Database": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 20
+    },
+    "Dataset": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 25
+    },
+    "EntityOfFutureInterest": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 24
+    },
+    "Event": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 11
+    },
+    "Fellowship": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 85
+    },
+    "Formula": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 158
+    },
+    "Grant": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 654
+    },
+    "Identifier": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 20
+    },
+    "Instrument": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 95
+    },
+    "LOC": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 200
+    },
+    "Mission": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 22
+    },
+    "Model": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 214
+    },
+    "ORG": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 1157
+    },
+    "ObservationalTechniques": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 1
+    },
+    "Observatory": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 182
+    },
+    "PER": {
+      "f1": 0.004075394803871625,
+      "precision": 0.13333333333333333,
+      "recall": 0.0020693222969477496,
+      "support": 1933
+    },
+    "Proposal": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 25
+    },
+    "Software": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 90
+    },
+    "Survey": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 81
+    },
+    "Tag": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 11
+    },
+    "Telescope": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 223
+    },
+    "TextGarbage": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 8
+    },
+    "URL": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 19
+    },
+    "Wavelength": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 258
+    }
+  }
+}

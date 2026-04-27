@@ -1,0 +1,146 @@
+{
+  "best_dev_f1": 0.0,
+  "best_epoch": 1,
+  "checkpoint_sha256": "b3f8401439c13a76c0d705ccdedeccb95cd2162f6fa78a25a026193d43886f28",
+  "eval_density": {
+    "other_target_test": {
+      "density": 0.12163238936147303,
+      "n_entities": 5648,
+      "n_examples": 3453,
+      "n_tokens": 46435,
+      "per_type": {
+        "LOC": 1668,
+        "MISC": 702,
+        "ORG": 1661,
+        "PER": 1617
+      }
+    },
+    "source_test": {
+      "density": 0.03841107002266492,
+      "n_entities": 966,
+      "n_examples": 2001,
+      "n_tokens": 25149,
+      "per_type": {
+        "LOC": 399,
+        "ORG": 224,
+        "PER": 343
+      }
+    },
+    "target_test": {
+      "density": 0.07752737870381672,
+      "n_entities": 61610,
+      "n_examples": 2549,
+      "n_tokens": 794687,
+      "per_type": {
+        "Archive": 359,
+        "CelestialObject": 3609,
+        "CelestialObjectRegion": 723,
+        "CelestialRegion": 209,
+        "Citation": 8621,
+        "Collaboration": 428,
+        "ComputingFacility": 607,
+        "Database": 342,
+        "Dataset": 516,
+        "EntityOfFutureInterest": 435,
+        "Event": 59,
+        "Fellowship": 607,
+        "Formula": 3452,
+        "Grant": 5254,
+        "Identifier": 172,
+        "Instrument": 1102,
+        "Location": 2256,
+        "Mission": 204,
+        "Model": 3208,
+        "ObservationalTechniques": 91,
+        "Observatory": 1326,
+        "Organization": 11399,
+        "Person": 6085,
+        "Proposal": 180,
+        "Software": 1386,
+        "Survey": 1188,
+        "Tag": 115,
+        "Telescope": 2346,
+        "TextGarbage": 283,
+        "URL": 405,
+        "Wavelength": 4643
+      }
+    }
+  },
+  "eval_truncations": {
+    "other_target_test": {
+      "n_total": 3453,
+      "n_truncated": 484
+    },
+    "source_test": {
+      "n_total": 2001,
+      "n_truncated": 141
+    },
+    "target_test": {
+      "n_total": 2549,
+      "n_truncated": 2480
+    }
+  },
+  "exp_name": "smoke_astro",
+  "iteration": 0,
+  "n_examples_total": 12543,
+  "n_source": 12543,
+  "n_target_injected": 0,
+  "n_target_units": 0,
+  "peak_gpu_mem_mb": 0.0,
+  "seed": 42,
+  "target_dev_density": {
+    "density": 0.07354450159952249,
+    "n_entities": 32898,
+    "n_examples": 1405,
+    "n_tokens": 447321,
+    "per_type": {
+      "Archive": 153,
+      "CelestialObject": 2285,
+      "CelestialObjectRegion": 150,
+      "CelestialRegion": 102,
+      "Citation": 4820,
+      "Collaboration": 238,
+      "ComputingFacility": 360,
+      "Database": 199,
+      "Dataset": 222,
+      "EntityOfFutureInterest": 52,
+      "Event": 37,
+      "Fellowship": 325,
+      "Formula": 1541,
+      "Grant": 2829,
+      "Identifier": 82,
+      "Instrument": 683,
+      "Location": 1157,
+      "Mission": 105,
+      "Model": 1412,
+      "ObservationalTechniques": 102,
+      "Observatory": 735,
+      "Organization": 6054,
+      "Person": 3267,
+      "Proposal": 76,
+      "Software": 839,
+      "Survey": 620,
+      "Tag": 53,
+      "Telescope": 1257,
+      "TextGarbage": 47,
+      "URL": 227,
+      "Wavelength": 2869
+    }
+  },
+  "target_fraction": 0.0,
+  "target_truncated_in_mix": 0,
+  "target_unit": "paragraph",
+  "timestamp": "2026-04-27T10:17:38.457891Z",
+  "train_mix_density": {
+    "density": 0.03432414861740452,
+    "n_entities": 7022,
+    "n_examples": 12543,
+    "n_tokens": 204579,
+    "per_type": {
+      "LOC": 2712,
+      "ORG": 1436,
+      "PER": 2874
+    }
+  },
+  "train_time_sec": 42.545904874801636
+}

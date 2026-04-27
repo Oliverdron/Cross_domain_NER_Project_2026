@@ -1,0 +1,41 @@
+{
+  "other_target_test": {
+    "entity_f1_macro": 0.0,
+    "entity_f1_micro": 0.0,
+    "entity_f1_weighted": 0.0,
+    "entity_precision": 0.0,
+    "entity_recall": 0.0,
+    "eval_loss": 1.4937051191926003,
+    "report": "                         precision    recall  f1-score   support\n\n                Archive     0.0000    0.0000    0.0000        28\n        CelestialObject     0.0000    0.0000    0.0000       181\n  CelestialObjectRegion     0.0000    0.0000    0.0000        30\n        CelestialRegion     0.0000    0.0000    0.0000         8\n               Citation     0.0000    0.0000    0.0000       491\n          Collaboration     0.0000    0.0000    0.0000        20\n      ComputingFacility     0.0000    0.0000    0.0000        37\n               Database     0.0000    0.0000    0.0000        20\n                Dataset     0.0000    0.0000    0.0000        25\n EntityOfFutureInterest     0.0000    0.0000    0.0000        24\n                  Event     0.0000    0.0000    0.0000        11\n             Fellowship     0.0000    0.0000    0.0000        85\n                Formula     0.0000    0.0000    0.0000       158\n                  Grant     0.0000    0.0000    0.0000       654\n             Identifier     0.0000    0.0000    0.0000        20\n             Instrument     0.0000    0.0000    0.0000        95\n                    LOC     0.0000    0.0000    0.0000       200\n                Mission     0.0000    0.0000    0.0000        22\n                  Model     0.0000    0.0000    0.0000       214\n                    ORG     0.0000    0.0000    0.0000      1157\nObservationalTechniques     0.0000    0.0000    0.0000         1\n            Observatory     0.0000    0.0000    0.0000       182\n                    PER     0.0000    0.0000    0.0000      1933\n               Proposal     0.0000    0.0000    0.0000        25\n               Software     0.0000    0.0000    0.0000        90\n                 Survey     0.0000    0.0000    0.0000        81\n                    Tag     0.0000    0.0000    0.0000        11\n              Telescope     0.0000    0.0000    0.0000       223\n            TextGarbage     0.0000    0.0000    0.0000         8\n                    URL     0.0000    0.0000    0.0000        19\n             Wavelength     0.0000    0.0000    0.0000       258\n\n              micro avg     0.0000    0.0000    0.0000      6311\n              macro avg     0.0000    0.0000    0.0000      6311\n           weighted avg     0.0000    0.0000    0.0000      6311\n",
+    "token_acc": 0.7821824516946468,
+    "token_f1": 0.0,
+    "token_precision": 0.0,
+    "token_recall": 0.0
+  },
+  "source_test": {
+    "entity_f1_macro": 0.0,
+    "entity_f1_micro": 0.0,
+    "entity_f1_weighted": 0.0,
+    "entity_precision": 0.0,
+    "entity_recall": 0.0,
+    "eval_loss": 0.34823263925500214,
+    "report": "              precision    recall  f1-score   support\n\n         LOC     0.0000    0.0000    0.0000       376\n         ORG     0.0000    0.0000    0.0000       204\n         PER     0.0000    0.0000    0.0000       334\n\n   micro avg     0.0000    0.0000    0.0000       914\n   macro avg     0.0000    0.0000    0.0000       914\nweighted avg     0.0000    0.0000    0.0000       914\n",
+    "token_acc": 0.9411617007030465,
+    "token_f1": 0.0,
+    "token_precision": 0.0,
+    "token_recall": 0.0
+  },
+  "target_test": {
+    "entity_f1_macro": 0.0,
+    "entity_f1_micro": 0.0,
+    "entity_f1_weighted": 0.0,
+    "entity_precision": 0.0,
+    "entity_recall": 0.0,
+    "eval_loss": 0.9396594144679882,
+    "report": "              precision    recall  f1-score   support\n\n         LOC     0.0000    0.0000    0.0000      1557\n         ORG     0.0000    0.0000    0.0000      1566\n         PER     0.0000    0.0000    0.0000      1504\n\n   micro avg     0.0000    0.0000    0.0000      4627\n   macro avg     0.0000    0.0000    0.0000      4627\nweighted avg     0.0000    0.0000    0.0000      4627\n",
+    "token_acc": 0.8428682737940641,
+    "token_f1": 0.0,
+    "token_precision": 0.0,
+    "token_recall": 0.0
+  }
+}

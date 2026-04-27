@@ -1,0 +1,44 @@
+# Iterative cross-domain NER — Target B (WIESP astrophysics, paragraph-split)
+#
+# WARNING: ~28% of astro paragraphs exceed BERT's 512-token cap and will
+# be tail-truncated. Documented in runs/<exp>/README.md after each run.
+# v1 does not use sliding windows — see Step 0 of the task brief.
+#
+# Equivalence ratio: 1 astro paragraph ≈ 30 EWT/CoNLL sentences = 1 unit.
+# units_per_step is in *paragraphs* here; the 30:1 ratio is for cross-config
+# *budget* comparisons during analysis (apply it in make_plots.py if needed).
+experiment_name: astro_wiesp
+output_dir: runs
+
+seeds: [42, 1337, 2024]
+
+model_name: google-bert/bert-base-cased
+tokenizer_name: google-bert/bert-base-cased
+max_seq_len: 512                 # BERT-base hard cap; ~28% truncation expected
+batch_size: 4                    # paragraphs are long, lower batch to fit memory
+learning_rate: 5.0e-5
+num_epochs: 5
+early_stopping_patience: 2
+warmup_ratio: 0.1
+weight_decay: 0.01
+
+source:
+  name: ewt
+  train: data/universal_train.iob2
+  dev:   data/universal_dev.iob2
+  test:  data/universal_test_masked.iob2
+  unit: sentence
+
+target:
+  name: astro
+  train: data/astro_train.iob2
+  dev:   data/astro_dev.iob2
+  test:  data/astro_test.iob2
+  unit: paragraph
+  units_per_step: 50            # 50 astro paragraphs per step ≈ 1500 EWT sentences (30:1)
+  n_iterations: 8               # 0, 50, 100, …, 350 paragraphs
+
+eval_sets:
+  source_test: data/universal_dev.iob2     # EWT test is masked
+  target_test: data/astro_test.iob2
+  other_target_test: data/news_test.iob2   # cross-domain probe (CoNLL)
