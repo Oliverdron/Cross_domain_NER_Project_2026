@@ -2,19 +2,19 @@
 # ──────────────────────────────────────────────────────────────────────────────
 # install_env.job
 #
-# One-time job: installs miniconda into /home/olgy/SOFTWARE/miniconda3 and
-# creates the `ner` conda env with torch (CUDA 12.1) + project requirements.
+# One-time job: creates the `ner` conda env from the system Anaconda3 module
+# and installs torch (CUDA 12.1) + project requirements into it.
 #
-# Run from: /home/olgy/Cross_domain_NER_Project_2026/hpc
-#   sbatch install_env.job
+# Run from: /home/olgy/Cross_domain_NER_Project_2026
+#   sbatch hpc/install_env.job
 #
 # Why a job and not the login node:
-#   ITU HPC docs explicitly disallow heavy installs on the login node
-#   (https://hpc.itu.dk/software/anaconda/conda_install_slurm/).
+#   ITU HPC docs require env creation to happen in a SLURM job, not on the
+#   login node (https://hpc.itu.dk/software/anaconda/conda_install_slurm/).
 # ──────────────────────────────────────────────────────────────────────────────
 #SBATCH --job-name=ner_install
-#SBATCH --output=logs/install_%j.out
-#SBATCH --error=logs/install_%j.err
+#SBATCH --output=hpc/logs/install_%j.out
+#SBATCH --error=hpc/logs/install_%j.err
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=01:00:00
@@ -24,38 +24,32 @@ set -euo pipefail
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 PROJECT_DIR="/home/olgy/Cross_domain_NER_Project_2026"
-SOFTWARE_DIR="/home/olgy/SOFTWARE"
-CONDA_DIR="${SOFTWARE_DIR}/miniconda3"
 ENV_NAME="ner"
-TMPDIR="/home/olgy/tmp"
-export TMPDIR
+export TMPDIR="/home/olgy/tmp"
+mkdir -p "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
 
-mkdir -p "${SOFTWARE_DIR}" "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
+cd "${PROJECT_DIR}"
 
-# ── 1. Install miniconda if not already there ────────────────────────────────
-if [ ! -x "${CONDA_DIR}/bin/conda" ]; then
-    echo "[install_env] Downloading miniconda installer…"
-    cd "${TMPDIR}"
-    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-         -O miniconda.sh
-    bash miniconda.sh -b -p "${CONDA_DIR}"
-    rm -f miniconda.sh
-else
-    echo "[install_env] miniconda already present at ${CONDA_DIR}"
-fi
+# ── 1. Load the system Anaconda3 module ──────────────────────────────────────
+module purge
+module load Anaconda3
 
-# ── 2. Activate conda in this shell ──────────────────────────────────────────
-source "${CONDA_DIR}/etc/profile.d/conda.sh"
-
-# ── 3. Create the env if missing ─────────────────────────────────────────────
+# ── 2. Create the env if it doesn't already exist ────────────────────────────
+# Conda envs default to ~/.conda/envs/<name>, which persists across logins.
 if ! conda env list | awk '{print $1}' | grep -qx "${ENV_NAME}"; then
     echo "[install_env] Creating conda env '${ENV_NAME}' (python 3.11)…"
     conda create -y -n "${ENV_NAME}" python=3.11
+else
+    echo "[install_env] Env '${ENV_NAME}' already exists, will install into it."
 fi
 
-conda activate "${ENV_NAME}"
+# ── 3. Activate it (legacy `source activate` works without conda init) ──────
+source activate "${ENV_NAME}"
 
-# ── 4. Install pytorch with CUDA 12.1 wheels, then the rest ──────────────────
+# ── 4. Install pytorch with CUDA 12.1 wheels, then the rest ─────────────────
+# The cu121 wheels bundle their own CUDA runtime, so this works whether or not
+# `module load CUDA/12.1.1` is loaded at runtime — but we still load it in
+# train jobs to match ITU's conventions and to expose nvcc if anything needs it.
 echo "[install_env] Installing pytorch (cu121)…"
 pip install --no-cache-dir \
     torch --index-url https://download.pytorch.org/whl/cu121
@@ -64,7 +58,7 @@ echo "[install_env] Installing project requirements…"
 pip install --no-cache-dir \
     transformers seqeval "numpy<2" tqdm datasets scikit-learn pyyaml pandas matplotlib evaluate
 
-# ── 5. Smoke-check torch sees CUDA — only meaningful if a GPU was assigned ──
+# ── 5. Quick sanity check ────────────────────────────────────────────────────
 python - <<'PY'
 import torch, transformers
 print("torch          :", torch.__version__)
@@ -73,4 +67,4 @@ print("cuda available :", torch.cuda.is_available())
 print("cuda runtime   :", torch.version.cuda)
 PY
 
-echo "[install_env] Done. Env '${ENV_NAME}' lives at ${CONDA_DIR}/envs/${ENV_NAME}"
+echo "[install_env] Done. Env '${ENV_NAME}' is at ~/.conda/envs/${ENV_NAME}"

@@ -4,7 +4,7 @@ Files in this folder:
 
 | File              | Purpose                                                            |
 |-------------------|--------------------------------------------------------------------|
-| `install_env.job` | One-time SLURM job: installs miniconda + creates the `ner` env.    |
+| `install_env.job` | One-time SLURM job: creates the `ner` conda env from `module load Anaconda3`. |
 | `smoke_test.job`  | 30-min sanity check on `scavenge` (`run_experiment.py --debug`).   |
 | `train_iter.job`  | The real training job. Submit once per config.                     |
 | `logs/`           | Auto-created on first job. SLURM `.out`/`.err` go here.            |
@@ -42,7 +42,11 @@ mkdir -p hpc/logs
 > the password when git asks. Or set up an SSH key on the HPC and add it to
 > GitHub.
 
-## 3. Install the conda env (as a job — never on the login node)
+## 3. Create the conda env (as a job — never on the login node)
+
+The HPC already provides Anaconda3 as a module, so we don't install our own.
+The job just runs `module load Anaconda3`, `conda create -n ner …`, then
+`pip install …` into it. The env lands in `~/.conda/envs/ner` and persists.
 
 ```bash
 sbatch hpc/install_env.job
@@ -56,9 +60,8 @@ ls hpc/logs/
 cat hpc/logs/install_*.out
 ```
 
-You should see something like `cuda available : True` (or `False` if the
-install job didn't get a GPU — that's fine, the env is still installed
-correctly; the real check happens in the training job).
+`cuda available : False` here is expected (the install job runs on a CPU node);
+the real GPU check happens in the smoke / training job.
 
 ## 4. Smoke test (recommended — ~10 min on a V100)
 
@@ -124,6 +127,7 @@ scp olgy@hpc.itu.dk:'/home/olgy/Cross_domain_NER_Project_2026/runs/iter_*/summar
 | `--cpus-per-task=8`      | 8 CPU cores            | Tokenisation + dataloader workers. More than this is wasted for a single-GPU run.                 |
 | `--mem=48G`              | 48 GB RAM              | Headroom for tokenised datasets + HF cache. Astro paragraphs (seq 512) are the heavy ones.        |
 | `--time=2-00:00:00`      | 2 days                 | 27 fine-tunes × ~5–15 epochs each (early stop, patience 8). Safe even for the slow `iter_astro`.  |
+| `module load Anaconda3`  | system Anaconda3       | Provided by the HPC — gives us `conda` + `source activate` without installing anything.            |
 | `module load CUDA/12.1.1`| CUDA 12.1              | Matches the `cu121` torch wheels installed in step 3.                                             |
 
 If a job hits the 2-day wall and you want more margin, bump `--time=3-00:00:00`

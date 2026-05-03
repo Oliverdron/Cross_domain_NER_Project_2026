@@ -21,7 +21,6 @@
 set -euo pipefail
 
 PROJECT_DIR="/home/olgy/Cross_domain_NER_Project_2026"
-CONDA_DIR="/home/olgy/SOFTWARE/miniconda3"
 ENV_NAME="ner"
 export TMPDIR="/home/olgy/tmp"
 mkdir -p "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
@@ -29,10 +28,10 @@ mkdir -p "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
 cd "${PROJECT_DIR}"
 
 module purge
+module load Anaconda3
 module load CUDA/12.1.1
 
-source "${CONDA_DIR}/etc/profile.d/conda.sh"
-conda activate "${ENV_NAME}"
+source activate "${ENV_NAME}"
 
 export HF_HOME="/home/olgy/.cache/huggingface"
 export PYTHONUNBUFFERED=1

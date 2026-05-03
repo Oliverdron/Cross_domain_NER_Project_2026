@@ -8,7 +8,7 @@
 #   sbatch --job-name=iter_conll --export=ALL,CFG=experiments/config_conll.yaml hpc/train_iter.job
 #   sbatch --job-name=iter_astro --export=ALL,CFG=experiments/config_astro.yaml hpc/train_iter.job
 #
-# Outputs end up in:
+# Outputs land in:
 #   /home/olgy/Cross_domain_NER_Project_2026/runs/<experiment_name>/...
 # (controlled by the YAML's `output_dir` + `experiment_name`)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -29,7 +29,6 @@ CFG="${CFG:-experiments/config_conll.yaml}"   # default if not exported
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 PROJECT_DIR="/home/olgy/Cross_domain_NER_Project_2026"
-CONDA_DIR="/home/olgy/SOFTWARE/miniconda3"
 ENV_NAME="ner"
 export TMPDIR="/home/olgy/tmp"
 mkdir -p "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
@@ -38,10 +37,10 @@ cd "${PROJECT_DIR}"
 
 # ── Modules + conda env ──────────────────────────────────────────────────────
 module purge
+module load Anaconda3
 module load CUDA/12.1.1
 
-source "${CONDA_DIR}/etc/profile.d/conda.sh"
-conda activate "${ENV_NAME}"
+source activate "${ENV_NAME}"
 
 # Cache HF downloads in /home/olgy/.cache so the model is fetched once and
 # re-used across iterations / re-submissions.
