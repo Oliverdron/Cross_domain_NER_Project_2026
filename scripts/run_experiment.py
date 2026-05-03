@@ -51,7 +51,6 @@ from src.experiment.logging_io import (
     init_iter_dir,
     init_seed_dir,
     run_root,
-    save_best_state_dict,
     write_confusion_csv,
     write_config_snapshot,
     write_json,
@@ -321,8 +320,6 @@ def main():
                 )
                 append_summary_row(str(summary_csv), row)
 
-            if k == n_iterations:
-                save_best_state_dict(model, str(iter_dir / "final_model_state_dict.pt"))
 
 
 def _eval_dataset_name(eval_set_name: str) -> str:

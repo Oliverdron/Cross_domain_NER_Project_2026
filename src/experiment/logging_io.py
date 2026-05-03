@@ -164,15 +164,6 @@ def write_confusion_csv(path: str, labels: List[str], matrix) -> None:
     os.replace(tmp, path)
 
 
-# --- model checkpoint --------------------------------------------------------
-
-def save_best_state_dict(model, path: str) -> None:
-    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    tmp = path + ".tmp"
-    torch.save(model.state_dict(), tmp)
-    os.replace(tmp, path)
-
-
 # --- summary row builder -----------------------------------------------------
 
 def build_summary_row(*, exp_name: str, seed: int, iteration: int,

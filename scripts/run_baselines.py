@@ -45,7 +45,6 @@ from src.experiment.logging_io import (
     build_summary_row,
     init_iter_dir,
     run_root,
-    save_best_state_dict,
     write_confusion_csv,
     write_json,
     write_jsonl,
@@ -266,7 +265,6 @@ def run_one_baseline(name: str, spec: Dict, seeds: List[int],
             )
             append_summary_row(str(summary_csv), row)
 
-        save_best_state_dict(model, str(iter_dir / "final_model_state_dict.pt"))
 
 
 def main():
