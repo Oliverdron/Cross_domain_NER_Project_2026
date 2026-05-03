@@ -19,13 +19,13 @@ model_name: google-bert/bert-base-cased
 tokenizer_name: google-bert/bert-base-cased
 
 max_seq_len: 512
-batch_size: 4
+batch_size: 32
 learning_rate: 5.0e-5
 weight_decay: 0.01
 warmup_ratio: 0.1
-num_epochs: 100
+num_epochs: 300
 block_size: 1
-early_stopping_patience: 3
+early_stopping_patience: 8
 early_stopping_metric: target_dev_span_f1
 
 source:
