@@ -36,9 +36,12 @@ module load Anaconda3
 
 # ── 2. Create the env if it doesn't already exist ────────────────────────────
 # Conda envs default to ~/.conda/envs/<name>, which persists across logins.
+# We use conda-forge with --override-channels because Anaconda's `defaults`
+# channel (repo.anaconda.com/pkgs/main) now requires interactive ToS
+# acceptance, which deadlocks SLURM jobs.
 if ! conda env list | awk '{print $1}' | grep -qx "${ENV_NAME}"; then
-    echo "[install_env] Creating conda env '${ENV_NAME}' (python 3.11)…"
-    conda create -y -n "${ENV_NAME}" python=3.11
+    echo "[install_env] Creating conda env '${ENV_NAME}' (python 3.11) from conda-forge…"
+    conda create -y -n "${ENV_NAME}" -c conda-forge --override-channels python=3.11
 else
     echo "[install_env] Env '${ENV_NAME}' already exists, will install into it."
 fi
