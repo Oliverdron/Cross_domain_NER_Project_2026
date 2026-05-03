@@ -1,0 +1,76 @@
+#!/bin/bash
+# ──────────────────────────────────────────────────────────────────────────────
+# install_env.job
+#
+# One-time job: installs miniconda into /home/olgy/SOFTWARE/miniconda3 and
+# creates the `ner` conda env with torch (CUDA 12.1) + project requirements.
+#
+# Run from: /home/olgy/Cross_domain_NER_Project_2026/hpc
+#   sbatch install_env.job
+#
+# Why a job and not the login node:
+#   ITU HPC docs explicitly disallow heavy installs on the login node
+#   (https://hpc.itu.dk/software/anaconda/conda_install_slurm/).
+# ──────────────────────────────────────────────────────────────────────────────
+#SBATCH --job-name=ner_install
+#SBATCH --output=logs/install_%j.out
+#SBATCH --error=logs/install_%j.err
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=01:00:00
+#SBATCH --partition=scavenge
+
+set -euo pipefail
+
+# ── Paths ────────────────────────────────────────────────────────────────────
+PROJECT_DIR="/home/olgy/Cross_domain_NER_Project_2026"
+SOFTWARE_DIR="/home/olgy/SOFTWARE"
+CONDA_DIR="${SOFTWARE_DIR}/miniconda3"
+ENV_NAME="ner"
+TMPDIR="/home/olgy/tmp"
+export TMPDIR
+
+mkdir -p "${SOFTWARE_DIR}" "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
+
+# ── 1. Install miniconda if not already there ────────────────────────────────
+if [ ! -x "${CONDA_DIR}/bin/conda" ]; then
+    echo "[install_env] Downloading miniconda installer…"
+    cd "${TMPDIR}"
+    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+         -O miniconda.sh
+    bash miniconda.sh -b -p "${CONDA_DIR}"
+    rm -f miniconda.sh
+else
+    echo "[install_env] miniconda already present at ${CONDA_DIR}"
+fi
+
+# ── 2. Activate conda in this shell ──────────────────────────────────────────
+source "${CONDA_DIR}/etc/profile.d/conda.sh"
+
+# ── 3. Create the env if missing ─────────────────────────────────────────────
+if ! conda env list | awk '{print $1}' | grep -qx "${ENV_NAME}"; then
+    echo "[install_env] Creating conda env '${ENV_NAME}' (python 3.11)…"
+    conda create -y -n "${ENV_NAME}" python=3.11
+fi
+
+conda activate "${ENV_NAME}"
+
+# ── 4. Install pytorch with CUDA 12.1 wheels, then the rest ──────────────────
+echo "[install_env] Installing pytorch (cu121)…"
+pip install --no-cache-dir \
+    torch --index-url https://download.pytorch.org/whl/cu121
+
+echo "[install_env] Installing project requirements…"
+pip install --no-cache-dir \
+    transformers seqeval "numpy<2" tqdm datasets scikit-learn pyyaml pandas matplotlib evaluate
+
+# ── 5. Smoke-check torch sees CUDA — only meaningful if a GPU was assigned ──
+python - <<'PY'
+import torch, transformers
+print("torch          :", torch.__version__)
+print("transformers   :", transformers.__version__)
+print("cuda available :", torch.cuda.is_available())
+print("cuda runtime   :", torch.version.cuda)
+PY
+
+echo "[install_env] Done. Env '${ENV_NAME}' lives at ${CONDA_DIR}/envs/${ENV_NAME}"

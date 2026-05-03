@@ -1,0 +1,48 @@
+#!/bin/bash
+# ──────────────────────────────────────────────────────────────────────────────
+# smoke_test.job
+#
+# Quick 30-min job on scavenge to verify the env, GPU, and that
+# run_experiment.py at least starts. Uses --debug (0.1% of data, 5 iters max).
+#
+#   sbatch hpc/smoke_test.job
+# ──────────────────────────────────────────────────────────────────────────────
+#SBATCH --job-name=ner_smoke
+#SBATCH --output=hpc/logs/%x_%j.out
+#SBATCH --error=hpc/logs/%x_%j.err
+#SBATCH --partition=scavenge
+#SBATCH --gres=gpu:v100:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=24G
+#SBATCH --time=00:30:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+
+set -euo pipefail
+
+PROJECT_DIR="/home/olgy/Cross_domain_NER_Project_2026"
+CONDA_DIR="/home/olgy/SOFTWARE/miniconda3"
+ENV_NAME="ner"
+export TMPDIR="/home/olgy/tmp"
+mkdir -p "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
+
+cd "${PROJECT_DIR}"
+
+module purge
+module load CUDA/12.1.1
+
+source "${CONDA_DIR}/etc/profile.d/conda.sh"
+conda activate "${ENV_NAME}"
+
+export HF_HOME="/home/olgy/.cache/huggingface"
+export PYTHONUNBUFFERED=1
+export TOKENIZERS_PARALLELISM=false
+
+hostname
+nvidia-smi
+python -c "import torch; print('cuda:', torch.cuda.is_available())"
+
+srun python -u scripts/run_experiment.py \
+    --config experiments/config_conll.yaml \
+    --device cuda \
+    --debug
