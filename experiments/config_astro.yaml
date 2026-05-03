@@ -1,0 +1,51 @@
+# Iterative cross-domain NER experiment — target = Astro (WIESP-2022 paragraphs)
+#
+# Source = EWT (full universal_train.iob2). Each iteration k uses
+# `step_size * k` target paragraphs from a seed-shuffled injection pool.
+# Model is re-initialised from the pretrained checkpoint at every iteration.
+#
+# Step size unit: 1 paragraph. Note that 1 astro paragraph ≈ 5 EWT sentences ≈
+# 1 unit (handled in analysis, not auto-converted).
+#
+# max_seq_len is 512 because astro paragraphs are far longer than CoNLL/EWT
+# sentences. Truncation counts are still recorded per iteration.
+
+experiment_name: iter_astro
+output_dir: runs/
+data_dir: data
+seeds: [42, 123, 456]
+
+model_name: google-bert/bert-base-cased
+tokenizer_name: google-bert/bert-base-cased
+
+max_seq_len: 512
+batch_size: 4
+learning_rate: 5.0e-5
+weight_decay: 0.01
+warmup_ratio: 0.1
+num_epochs: 10
+early_stopping_patience: 3
+early_stopping_metric: target_dev_span_f1
+
+source:
+  name: ewt
+  train: data/universal_train.iob2
+  dev:   data/universal_dev.iob2
+  unit:  sentence
+
+target:
+  name: astro
+  train: data/astro_train.iob2
+  dev:   data/astro_dev.iob2
+  test:  data/astro_test.iob2
+  unit:  paragraph
+  step_size: 50
+  step_size_unit: paragraph
+  n_iterations: 8
+
+# EWT test (universal_test_masked.iob2) has masked gold tags → use ewt_dev as
+# the source-forgetting probe.
+eval_sets:
+  ewt_dev:    data/universal_dev.iob2
+  conll_test: data/news_test.iob2
+  astro_test: data/astro_test.iob2

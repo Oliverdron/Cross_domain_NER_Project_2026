@@ -67,13 +67,14 @@ def main():
     model = build_model(args.model_name)
     model.to(device)
 
-    best_model_dir = train(
+    train_result = train(
         model=model,
         train_loader=train_loader,
         dev_loader=ewt_dev_loader,
         device=device,
         args=args,
     )
+    best_model_dir = train_result["best_model_dir"]
 
     # ── Load best checkpoint ──────────────────────────────────────────────────
     print(f"\n── Loading best model from {best_model_dir} ─────────────")

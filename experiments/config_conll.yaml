@@ -1,0 +1,48 @@
+# Iterative cross-domain NER experiment — target = CoNLL-2003 (news)
+#
+# Source = EWT (full universal_train.iob2). Each iteration k uses
+# `step_size * k` target sentences from a seed-shuffled injection pool.
+# Model is re-initialised from the pretrained checkpoint at every iteration.
+#
+# Step size unit: 1 sentence. Note that 1 astro paragraph ≈ 5 EWT sentences ≈
+# 1 unit (handled in analysis, not auto-converted).
+
+experiment_name: iter_conll
+output_dir: runs/
+data_dir: data
+seeds: [42, 123, 456]
+
+model_name: google-bert/bert-base-cased
+tokenizer_name: google-bert/bert-base-cased
+
+max_seq_len: 256
+batch_size: 16
+learning_rate: 5.0e-5
+weight_decay: 0.01
+warmup_ratio: 0.1
+num_epochs: 10
+early_stopping_patience: 3
+early_stopping_metric: target_dev_span_f1
+
+source:
+  name: ewt
+  train: data/universal_train.iob2
+  dev:   data/universal_dev.iob2
+  unit:  sentence
+
+target:
+  name: conll
+  train: data/news_train.iob2
+  dev:   data/news_dev.iob2
+  test:  data/news_test.iob2
+  unit:  sentence
+  step_size: 200
+  step_size_unit: sentence
+  n_iterations: 8
+
+# EWT test (universal_test_masked.iob2) has masked gold tags → use ewt_dev as
+# the source-forgetting probe.
+eval_sets:
+  ewt_dev:    data/universal_dev.iob2
+  conll_test: data/news_test.iob2
+  astro_test: data/astro_test.iob2
