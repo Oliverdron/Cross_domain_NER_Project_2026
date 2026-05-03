@@ -38,14 +38,16 @@ ENTITY_TYPES = _bio_collapsed_types()
 
 SUMMARY_COLUMNS: List[str] = [
     "exp_name", "seed", "iteration",
-    "n_target_examples", "n_target_units", "target_fraction",
+    "n_blocks", "n_target_examples", "n_source_examples", "train_set_size",
+    "target_fraction",
     "eval_set",
     "entity_f1_micro", "entity_f1_macro", "entity_f1_weighted",
     "entity_precision", "entity_recall",
     "token_f1", "token_acc", "eval_loss",
+    "delta_f1_vs_iter0",
     *[f"f1_{t}" for t in ENTITY_TYPES],
     *[f"support_{t}" for t in ENTITY_TYPES],
-    "train_time_sec", "best_epoch", "peak_gpu_mem_mb",
+    "best_epoch", "train_time_sec", "peak_gpu_mem_mb",
 ]
 
 
@@ -113,7 +115,7 @@ def init_iter_dir(output_dir: str, exp_name: str, seed: int, iter_idx: int) -> P
     p = (run_root(output_dir, exp_name)
          / "seeds" / f"seed_{seed}"
          / f"iter_{iter_idx:03d}")
-    (p / "checkpoint").mkdir(parents=True, exist_ok=True)
+    p.mkdir(parents=True, exist_ok=True)
     return p
 
 
@@ -174,17 +176,22 @@ def save_best_state_dict(model, path: str) -> None:
 # --- summary row builder -----------------------------------------------------
 
 def build_summary_row(*, exp_name: str, seed: int, iteration: int,
-                      n_target_examples: int, n_target_units: int,
+                      n_target_examples: int,
                       target_fraction: float, eval_set: str,
                       eval_metrics: Dict, per_type: Dict[str, Dict],
                       train_time_sec: float, best_epoch: int,
-                      peak_gpu_mem_mb: int) -> Dict[str, Any]:
+                      peak_gpu_mem_mb: int,
+                      n_source_examples: int,
+                      block_size: int,
+                      delta_f1_vs_iter0: float) -> Dict[str, Any]:
     row: Dict[str, Any] = {
         "exp_name":           exp_name,
         "seed":               seed,
         "iteration":          iteration,
+        "n_blocks":           n_target_examples // block_size if block_size else 0,
         "n_target_examples":  n_target_examples,
-        "n_target_units":     n_target_units,
+        "n_source_examples":  n_source_examples,
+        "train_set_size":     n_source_examples + n_target_examples,
         "target_fraction":    target_fraction,
         "eval_set":           eval_set,
         "entity_f1_micro":    eval_metrics["f1"],
@@ -195,8 +202,9 @@ def build_summary_row(*, exp_name: str, seed: int, iteration: int,
         "token_f1":           eval_metrics.get("token_f1", ""),
         "token_acc":          eval_metrics.get("token_acc", ""),
         "eval_loss":          eval_metrics["loss"],
-        "train_time_sec":     train_time_sec,
+        "delta_f1_vs_iter0":  delta_f1_vs_iter0,
         "best_epoch":         best_epoch,
+        "train_time_sec":     train_time_sec,
         "peak_gpu_mem_mb":    peak_gpu_mem_mb,
     }
     for t in ENTITY_TYPES:

@@ -60,6 +60,7 @@ class ExperimentConfig:
     target: TargetCfg
     eval_sets: List[EvalSetCfg]
     data_dir: str = "data"
+    block_size: int = 1
     raw_yaml_path: str = ""
 
     def to_dict(self) -> dict:
@@ -94,6 +95,7 @@ def load_config(yaml_path: str) -> ExperimentConfig:
         target=tgt,
         eval_sets=eval_sets,
         data_dir=raw.get("data_dir", "data"),
+        block_size=int(raw.get("block_size", 1)),
         raw_yaml_path=os.path.abspath(yaml_path),
     )
 

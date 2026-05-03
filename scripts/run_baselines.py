@@ -17,6 +17,7 @@ The script does not run automatically on import.
 import argparse
 import math
 import os
+import shutil
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -99,7 +100,7 @@ DEFAULTS = SimpleNamespace(
     learning_rate=5e-5,
     weight_decay=0.01,
     warmup_ratio=0.1,
-    num_epochs=1,
+    num_epochs=100,
     early_stopping_patience=3,
 )
 
@@ -115,13 +116,18 @@ def _build_eval_loader(examples, tokenizer, max_seq_len, batch_size):
 
 
 def run_one_baseline(name: str, spec: Dict, seeds: List[int],
-                     output_dir: str, device: torch.device):
+                     output_dir: str, device: torch.device,
+                     debug: bool = False):
     print(f"\n══════════ baseline: {name} ══════════")
 
     tokenizer = AutoTokenizer.from_pretrained(DEFAULTS.tokenizer_name, use_fast=True)
 
     train_examples = _load(spec["train_path"], spec["token_col"], spec["tag_col"], spec["unit"])
     dev_examples   = _load(spec["dev_path"],   spec["token_col"], spec["tag_col"], spec["unit"])
+
+    if debug:
+        train_examples = train_examples[:max(1, int(len(train_examples) * 0.001))]
+        dev_examples   = dev_examples[:max(1, int(len(dev_examples) * 0.001))]
 
     print(f"  train: {len(train_examples)}, dev: {len(dev_examples)}")
     print(f"  entity_density train: {entity_density(train_examples):.4f}")
@@ -132,6 +138,8 @@ def run_one_baseline(name: str, spec: Dict, seeds: List[int],
     eval_tokens_map:   Dict[str, List[List[str]]] = {}
     for e in EVAL_SETS:
         ex = _load(e["path"], e["token_col"], e["tag_col"], e["unit"])
+        if debug:
+            ex = ex[:max(1, int(len(ex) * 0.001))]
         loader, n_t = _build_eval_loader(ex, tokenizer,
                                          spec["max_seq_len"], spec["batch_size"])
         eval_examples_map[e["name"]] = ex
@@ -200,6 +208,7 @@ def run_one_baseline(name: str, spec: Dict, seeds: List[int],
         model = AutoModelForTokenClassification.from_pretrained(
             train_result["best_model_dir"],
         ).to(device)
+        shutil.rmtree(train_result["best_model_dir"])
 
         metrics_per_set: Dict[str, Dict] = {}
         for ev_name, loader in eval_loaders.items():
@@ -238,15 +247,12 @@ def run_one_baseline(name: str, spec: Dict, seeds: List[int],
                                 m["confusion_labels"], m["confusion_matrix"])
             write_jsonl(str(iter_dir / f"predictions_{ev}.jsonl"), m["predictions"])
 
-        save_best_state_dict(model, str(iter_dir / "checkpoint" / "state_dict.pt"))
-
         for ev, m in metrics_per_set.items():
             row = build_summary_row(
                 exp_name=f"baseline_{name}",
                 seed=seed,
                 iteration=0,
                 n_target_examples=0,
-                n_target_units=0,
                 target_fraction="",        # NaN-equivalent
                 eval_set=ev,
                 eval_metrics=m,
@@ -254,8 +260,13 @@ def run_one_baseline(name: str, spec: Dict, seeds: List[int],
                 train_time_sec=train_result["train_time_sec"],
                 best_epoch=train_result["best_epoch"],
                 peak_gpu_mem_mb=train_result["peak_gpu_mem_mb"],
+                n_source_examples=len(train_examples),
+                block_size=1,
+                delta_f1_vs_iter0=0.0,
             )
             append_summary_row(str(summary_csv), row)
+
+        save_best_state_dict(model, str(iter_dir / "final_model_state_dict.pt"))
 
 
 def main():
@@ -266,14 +277,20 @@ def main():
     parser.add_argument("--seeds", nargs="+", type=int, default=[42, 123, 456])
     parser.add_argument("--output_dir", default="runs")
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--debug", action="store_true", default=False)
     args = parser.parse_args()
+
+    if args.debug:
+        print("⚠️  DEBUG MODE: using 0.1% of data, 1 seed, 5 iterations max. Do not use for real experiments.")
+        args.seeds = [42]
 
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
     if args.device == "cuda" and not torch.cuda.is_available():
         print("CUDA not available, falling back to CPU.")
 
     for name in args.baselines:
-        run_one_baseline(name, BASELINES[name], args.seeds, args.output_dir, device)
+        run_one_baseline(name, BASELINES[name], args.seeds, args.output_dir, device,
+                         debug=args.debug)
 
 
 if __name__ == "__main__":

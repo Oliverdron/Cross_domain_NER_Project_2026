@@ -10,6 +10,7 @@ this file is executed as __main__.
 
 import argparse
 import os
+import shutil
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -106,9 +107,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--debug", action="store_true", default=False)
     args = parser.parse_args()
 
     cfg = load_config(args.config)
+
+    seeds = list(cfg.seeds)
+    n_iterations = cfg.target.n_iterations
+    if args.debug:
+        print("⚠️  DEBUG MODE: using 0.1% of data, 1 seed, 5 iterations max. Do not use for real experiments.")
+        seeds = [42]
+        n_iterations = 5
 
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
     if args.device == "cuda" and not torch.cuda.is_available():
@@ -127,6 +136,11 @@ def main():
         e.name: _load_examples(e.path, _eval_dataset_name(e.name), _eval_unit(cfg, e.name))
         for e in cfg.eval_sets
     }
+
+    if args.debug:
+        source_train  = source_train[:max(1, int(len(source_train) * 0.001))]
+        target_dev    = target_dev[:max(1, int(len(target_dev) * 0.001))]
+        eval_examples = {k: v[:max(1, int(len(v) * 0.001))] for k, v in eval_examples.items()}
 
     print(f"  source.train ({cfg.source.name}, {cfg.source.unit}): {len(source_train)}")
     print(f"  target.train ({cfg.target.name}, {cfg.target.unit}): {len(target_train)}")
@@ -175,15 +189,19 @@ def main():
 
     # ── Iterate over seeds × iterations ──────────────────────────────────────
     n_source = len(source_train)
+    iter0_f1: Dict[tuple, float] = {}
 
-    for seed in cfg.seeds:
+    for seed in seeds:
         print(f"\n══════════ seed {seed} ══════════")
         seed_everything(seed)
 
         seed_dir = init_seed_dir(cfg.output_dir, cfg.experiment_name, seed)
         pool_ids = build_injection_pool(target_train, seed, str(seed_dir))
 
-        for k in range(cfg.target.n_iterations + 1):
+        if args.debug:
+            pool_ids = pool_ids[:max(1, int(len(pool_ids) * 0.001))]
+
+        for k in range(n_iterations + 1):
             print(f"\n── seed {seed}, iter {k} ─────────────────────────────")
             iter_dir = init_iter_dir(cfg.output_dir, cfg.experiment_name, seed, k)
 
@@ -224,6 +242,7 @@ def main():
             model = AutoModelForTokenClassification.from_pretrained(
                 train_result["best_model_dir"],
             ).to(device)
+            shutil.rmtree(train_result["best_model_dir"])
 
             metrics_per_set: Dict[str, Dict] = {}
             for name, loader in eval_loaders.items():
@@ -279,16 +298,16 @@ def main():
             write_text(str(iter_dir / "added_target_ids.txt"),
                        "\n".join(target_chunk_ids) + ("\n" if target_chunk_ids else ""))
 
-            save_best_state_dict(model, str(iter_dir / "checkpoint" / "state_dict.pt"))
-
             # ── summary.csv: one row per eval set ────────────────────────────
             for name, m in metrics_per_set.items():
+                if k == 0:
+                    iter0_f1[(seed, name)] = m["f1"]
+                delta = m["f1"] - iter0_f1.get((seed, name), m["f1"])
                 row = build_summary_row(
                     exp_name=cfg.experiment_name,
                     seed=seed,
                     iteration=k,
                     n_target_examples=n_target,
-                    n_target_units=n_target,
                     target_fraction=target_fraction,
                     eval_set=name,
                     eval_metrics=m,
@@ -296,8 +315,14 @@ def main():
                     train_time_sec=train_result["train_time_sec"],
                     best_epoch=train_result["best_epoch"],
                     peak_gpu_mem_mb=train_result["peak_gpu_mem_mb"],
+                    n_source_examples=n_source,
+                    block_size=cfg.block_size,
+                    delta_f1_vs_iter0=delta,
                 )
                 append_summary_row(str(summary_csv), row)
+
+            if k == n_iterations:
+                save_best_state_dict(model, str(iter_dir / "final_model_state_dict.pt"))
 
 
 def _eval_dataset_name(eval_set_name: str) -> str:
