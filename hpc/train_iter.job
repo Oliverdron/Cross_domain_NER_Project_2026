@@ -15,12 +15,17 @@
 #SBATCH --output=hpc/logs/%x_%j.out          # %x = job-name, %j = job id
 #SBATCH --error=hpc/logs/%x_%j.err
 #SBATCH --partition=acltr
-#SBATCH --gres=gpu:v100:1
+#SBATCH --gres=gpu:1
+# Any modern GPU (V100, A100, H100, L40s, RTX6000, A30) works fine —
+# bert-base peaks at ~2 GB GPU memory, so even consumer cards fit.
+# Smoke test verified the pipeline; F1 scores are GPU-invariant.
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
 #SBATCH --time=2-00:00:00                    # 2 days; acltr allows up to 3 for students
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
+#SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT_80   # email on start, success, failure, 80% wall-time
+#SBATCH --mail-user=olgy@itu.dk
 
 set -euo pipefail
 
