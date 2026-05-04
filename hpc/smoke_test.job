@@ -11,7 +11,9 @@
 #SBATCH --output=hpc/logs/%x_%j.out
 #SBATCH --error=hpc/logs/%x_%j.err
 #SBATCH --partition=scavenge
-#SBATCH --gres=gpu:v100:1
+#SBATCH --gres=gpu:1
+# (any GPU is fine for the smoke test — RTX 6000 / RTX 2070 / V100 all OK)
+# The real train_iter.job still pins to V100 for consistency.
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=24G
 #SBATCH --time=00:30:00
