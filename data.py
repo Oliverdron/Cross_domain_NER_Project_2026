@@ -233,14 +233,13 @@ def prepare_split(sentences: List[Dict], tokenizer, max_length: int,
     })
     trunc_counter = [0] if return_truncation_count else None
     tokenize_fn   = make_tokenize_fn(tokenizer, max_length, trunc_counter=trunc_counter)
-    map_kwargs = dict(
+    ds = hf_ds.map(
+        tokenize_fn,
         batched=True,
         remove_columns=["tokens", "ner_tags"],
         desc="Tokenising",
+        load_from_cache_file=False,
     )
-    if return_truncation_count:
-        map_kwargs["load_from_cache_file"] = False  # closure counter must run
-    ds = hf_ds.map(tokenize_fn, **map_kwargs)
     if return_truncation_count:
         return ds, trunc_counter[0]
     return ds

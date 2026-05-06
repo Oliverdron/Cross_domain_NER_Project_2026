@@ -39,10 +39,9 @@ def build_injection_pool(target_examples: List[Dict], seed: int, out_dir: str) -
     return ids
 
 
-def slice_for_iter(pool_ids: List[str], k: int, step_size: int) -> List[str]:
-    """First k * step_size ids from the pool. k=0 → empty list."""
-    n = k * step_size
-    return pool_ids[:n]
+def slice_for_iter(pool_ids: List[str], n_target: int) -> List[str]:
+    """First n_target ids from the pool. n_target=0 → empty list."""
+    return pool_ids[:n_target]
 
 
 def select_examples(all_examples: List[Dict], ids: List[str]) -> List[Dict]:

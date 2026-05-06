@@ -30,9 +30,6 @@ class TargetCfg:
     dev: str
     test: str
     unit: str
-    step_size: int
-    n_iterations: int
-    step_size_unit: str = "sentence"
 
 
 @dataclass(frozen=True)
@@ -55,10 +52,10 @@ class ExperimentConfig:
     warmup_ratio: float
     num_epochs: int
     early_stopping_patience: int
-    early_stopping_metric: str
     source: SourceCfg
     target: TargetCfg
     eval_sets: List[EvalSetCfg]
+    schedule: List[int] = field(default_factory=list)
     data_dir: str = "data"
     block_size: int = 1
     raw_yaml_path: str = ""
@@ -90,10 +87,10 @@ def load_config(yaml_path: str) -> ExperimentConfig:
         warmup_ratio=float(raw.get("warmup_ratio", 0.1)),
         num_epochs=int(raw["num_epochs"]),
         early_stopping_patience=int(raw["early_stopping_patience"]),
-        early_stopping_metric=str(raw["early_stopping_metric"]),
         source=src,
         target=tgt,
         eval_sets=eval_sets,
+        schedule=[int(n) for n in raw["schedule"]],
         data_dir=raw.get("data_dir", "data"),
         block_size=int(raw.get("block_size", 1)),
         raw_yaml_path=os.path.abspath(yaml_path),

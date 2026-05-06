@@ -112,11 +112,11 @@ def main():
     cfg = load_config(args.config)
 
     seeds = list(cfg.seeds)
-    n_iterations = cfg.target.n_iterations
+    schedule = list(cfg.schedule)
     if args.debug:
         print("⚠️  DEBUG MODE: using 0.1% of data, 1 seed, 5 iterations max. Do not use for real experiments.")
         seeds = [42]
-        n_iterations = 5
+        schedule = schedule[:5]
 
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
     if args.device == "cuda" and not torch.cuda.is_available():
@@ -200,11 +200,11 @@ def main():
         if args.debug:
             pool_ids = pool_ids[:max(1, int(len(pool_ids) * 0.001))]
 
-        for k in range(n_iterations + 1):
+        for k, n_target in enumerate(schedule):
             print(f"\n── seed {seed}, iter {k} ─────────────────────────────")
             iter_dir = init_iter_dir(cfg.output_dir, cfg.experiment_name, seed, k)
 
-            target_chunk_ids = slice_for_iter(pool_ids, k, cfg.target.step_size)
+            target_chunk_ids = slice_for_iter(pool_ids, n_target)
             target_chunk     = select_examples(target_train, target_chunk_ids)
             mix              = source_train + target_chunk
 
@@ -252,7 +252,6 @@ def main():
                 )
 
             # ── Persist artifacts ────────────────────────────────────────────
-            n_target = len(target_chunk)
             target_fraction = (n_target / (n_source + n_target)) if (n_source + n_target) else 0.0
 
             write_json(str(iter_dir / "meta.json"), {
@@ -268,8 +267,6 @@ def main():
                 "peak_gpu_mem_mb":         train_result["peak_gpu_mem_mb"],
                 "truncation_count":        n_mix_trunc,
                 "entity_density_train_mix": entity_density(mix),
-                "step_size":               cfg.target.step_size,
-                "step_size_unit":          cfg.target.step_size_unit,
                 "target_unit":             cfg.target.unit,
             })
 

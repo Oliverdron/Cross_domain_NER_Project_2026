@@ -1,11 +1,11 @@
 # Iterative cross-domain NER experiment — target = Astro (WIESP-2022 paragraphs)
 #
 # Source = EWT (full universal_train.iob2). Each iteration k uses
-# `step_size * k` target paragraphs from a seed-shuffled injection pool.
+# schedule[k] target paragraphs from a seed-shuffled injection pool.
 # Model is re-initialised from the pretrained checkpoint at every iteration.
 #
-# Step size unit: 1 paragraph. Note that 1 astro paragraph ≈ 5 EWT sentences ≈
-# 1 unit (handled in analysis, not auto-converted).
+# Schedule unit: 1 paragraph (matches target.unit). Note that 1 astro paragraph
+# ≈ 5 EWT sentences ≈ 1 unit (handled in analysis, not auto-converted).
 #
 # max_seq_len is 512 because astro paragraphs are far longer than CoNLL/EWT
 # sentences. Truncation counts are still recorded per iteration.
@@ -26,7 +26,11 @@ warmup_ratio: 0.1
 num_epochs: 300
 block_size: 1
 early_stopping_patience: 8
-early_stopping_metric: target_dev_span_f1
+
+# Cumulative target example counts per iteration. Iter k uses schedule[k]
+# target paragraphs from the seed-shuffled injection pool. Length defines
+# total iterations.
+schedule: [0, 5, 7, 10, 15, 20, 25, 35, 50, 70, 95, 130, 180, 250, 350, 490, 675, 935, 1300, 1800]
 
 source:
   name: ewt
@@ -40,9 +44,6 @@ target:
   dev:   data/astro_dev.iob2
   test:  data/astro_test.iob2
   unit:  paragraph
-  step_size: 5
-  step_size_unit: paragraph
-  n_iterations: 8
 
 # EWT test (universal_test_masked.iob2) has masked gold tags → use ewt_dev as
 # the source-forgetting probe.

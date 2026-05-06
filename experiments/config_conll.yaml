@@ -1,11 +1,11 @@
 # Iterative cross-domain NER experiment — target = CoNLL-2003 (news)
 #
 # Source = EWT (full universal_train.iob2). Each iteration k uses
-# `step_size * k` target sentences from a seed-shuffled injection pool.
+# schedule[k] target sentences from a seed-shuffled injection pool.
 # Model is re-initialised from the pretrained checkpoint at every iteration.
 #
-# Step size unit: 1 sentence. Note that 1 astro paragraph ≈ 5 EWT sentences ≈
-# 1 unit (handled in analysis, not auto-converted).
+# Schedule unit: 1 sentence (matches target.unit). Note that 1 astro paragraph
+# ≈ 5 EWT sentences ≈ 1 unit (handled in analysis, not auto-converted).
 
 experiment_name: iter_conll
 output_dir: runs/
@@ -23,7 +23,11 @@ warmup_ratio: 0.1
 num_epochs: 300
 block_size: 30
 early_stopping_patience: 8
-early_stopping_metric: target_dev_span_f1
+
+# Cumulative target example counts per iteration. Iter k uses schedule[k]
+# target sentences from the seed-shuffled injection pool. Length defines
+# total iterations.
+schedule: [0, 150, 200, 250, 320, 410, 530, 680, 875, 1125, 1450, 1875, 2400, 3100, 4000, 5100, 6600, 8500, 10900, 14000]
 
 source:
   name: ewt
@@ -37,9 +41,6 @@ target:
   dev:   data/news_dev.iob2
   test:  data/news_test.iob2
   unit:  sentence
-  step_size: 150
-  step_size_unit: sentence
-  n_iterations: 8
 
 # EWT test (universal_test_masked.iob2) has masked gold tags → use ewt_dev as
 # the source-forgetting probe.
