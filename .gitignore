@@ -210,3 +210,13 @@ __marimo__/
 helper/__pycache__
 
 .DS_Store
+
+# Experiment run artifacts
+# Predictions are large (astro can be ~30 MB per iteration) and not regeneratable
+# without re-training. Keep them on local disk only — share via OneDrive/zenodo
+# if needed. All other artifacts (summary.csv, metrics.json, confusion matrices,
+# train_log.jsonl, etc.) are committed.
+runs/**/predictions_*.jsonl
+
+# HPC SLURM logs (regenerable, can get large)
+hpc/logs/
