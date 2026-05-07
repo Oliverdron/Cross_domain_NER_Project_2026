@@ -1,0 +1,17 @@
+{
+  "iteration": 6,
+  "seed": 123,
+  "n_target_examples": 900,
+  "n_target_units": 900,
+  "target_fraction": 0.06694934166480697,
+  "train_time_sec": 1691.7779386043549,
+  "best_epoch": 21,
+  "best_dev_f1": 0.9112237796997714,
+  "epochs_run": 29,
+  "peak_gpu_mem_mb": 5587,
+  "truncation_count": 0,
+  "entity_density_train_mix": 0.0560427552135465,
+  "step_size": 150,
+  "step_size_unit": "sentence",
+  "target_unit": "sentence"
+}

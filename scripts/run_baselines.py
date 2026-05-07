@@ -53,14 +53,17 @@ from src.experiment.logging_io import (
 
 # --- baseline specs ---------------------------------------------------------
 
+#
+# Hyperparameters MUST match experiments/config_conll.yaml + config_astro.yaml
+# (max_seq_len=512, batch_size=32) for fair comparison with the iterative runs.
 BASELINES: Dict[str, Dict] = {
     "ewt_only": {
         "train_path": "data/universal_train.iob2",
         "dev_path":   "data/universal_dev.iob2",
         "ds_name":    "ewt",
         "unit":       "sentence",
-        "max_seq_len": 256,
-        "batch_size":  16,
+        "max_seq_len": 512,
+        "batch_size":  32,
         "token_col":  1, "tag_col":  2,
     },
     "conll_only": {
@@ -68,8 +71,8 @@ BASELINES: Dict[str, Dict] = {
         "dev_path":   "data/news_dev.iob2",
         "ds_name":    "conll",
         "unit":       "sentence",
-        "max_seq_len": 256,
-        "batch_size":  16,
+        "max_seq_len": 512,
+        "batch_size":  32,
         "token_col":  0, "tag_col":  1,
     },
     "astro_only": {
@@ -78,7 +81,7 @@ BASELINES: Dict[str, Dict] = {
         "ds_name":    "astro",
         "unit":       "paragraph",
         "max_seq_len": 512,
-        "batch_size":  4,
+        "batch_size":  32,
         "token_col":  0, "tag_col":  1,
     },
 }
@@ -93,14 +96,17 @@ EVAL_SETS: List[Dict] = [
 
 # --- shared training defaults ----------------------------------------------
 
+# Hyperparameters MUST match experiments/config_conll.yaml + config_astro.yaml
+# (num_epochs=300, early_stopping_patience=8) for fair comparison with the
+# iterative runs.
 DEFAULTS = SimpleNamespace(
     model_name="google-bert/bert-base-cased",
     tokenizer_name="google-bert/bert-base-cased",
     learning_rate=5e-5,
     weight_decay=0.01,
     warmup_ratio=0.1,
-    num_epochs=100,
-    early_stopping_patience=3,
+    num_epochs=300,
+    early_stopping_patience=8,
 )
 
 

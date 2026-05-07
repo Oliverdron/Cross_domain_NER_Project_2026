@@ -1,0 +1,290 @@
+{
+  "ewt_dev": {
+    "Grant": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "0"
+    },
+    "LOC": {
+      "precision": 0.7918660287081339,
+      "recall": 0.8295739348370927,
+      "f1-score": 0.8102815177478578,
+      "support": "399"
+    },
+    "ORG": {
+      "precision": 0.5890909090909091,
+      "recall": 0.7232142857142857,
+      "f1-score": 0.6492985971943888,
+      "support": "224"
+    },
+    "PER": {
+      "precision": 0.8162729658792651,
+      "recall": 0.9067055393586005,
+      "f1-score": 0.8591160220994475,
+      "support": "343"
+    },
+    "micro avg": {
+      "precision": 0.7465181058495822,
+      "recall": 0.8322981366459627,
+      "f1-score": 0.7870778267254038,
+      "support": "966"
+    },
+    "macro avg": {
+      "precision": 0.5493074759195771,
+      "recall": 0.6148734399774948,
+      "f1-score": 0.5796740342604235,
+      "support": "966"
+    },
+    "weighted avg": {
+      "precision": 0.7535119424301211,
+      "recall": 0.8322981366459627,
+      "f1-score": 0.7902919326429076,
+      "support": "966"
+    }
+  },
+  "conll_test": {
+    "LOC": {
+      "precision": 0.5893536121673004,
+      "recall": 0.8363309352517986,
+      "f1-score": 0.6914498141263942,
+      "support": "1668"
+    },
+    "ORG": {
+      "precision": 0.6,
+      "recall": 0.3901264298615292,
+      "f1-score": 0.47282013863553446,
+      "support": "1661"
+    },
+    "PER": {
+      "precision": 0.8638443935926774,
+      "recall": 0.9338280766852195,
+      "f1-score": 0.8974739970282318,
+      "support": "1617"
+    },
+    "micro avg": {
+      "precision": 0.6839268527430221,
+      "recall": 0.7183582693085322,
+      "f1-score": 0.7007198501134011,
+      "support": "4946"
+    },
+    "macro avg": {
+      "precision": 0.684399335253326,
+      "recall": 0.7200951472661824,
+      "f1-score": 0.6872479832633869,
+      "support": "4946"
+    },
+    "weighted avg": {
+      "precision": 0.6826684612888023,
+      "recall": 0.7183582693085322,
+      "f1-score": 0.6853837431118275,
+      "support": "4946"
+    }
+  },
+  "astro_test": {
+    "Archive": {
+      "precision": 0.12682926829268293,
+      "recall": 0.08024691358024691,
+      "f1-score": 0.09829867674858223,
+      "support": "324"
+    },
+    "CelestialObject": {
+      "precision": 0.5005096839959225,
+      "recall": 0.20297643654402645,
+      "f1-score": 0.2888235294117647,
+      "support": "2419"
+    },
+    "CelestialObjectRegion": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "484"
+    },
+    "CelestialRegion": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "148"
+    },
+    "Citation": {
+      "precision": 0.5239664881197638,
+      "recall": 0.6314134392585237,
+      "f1-score": 0.5726938377242362,
+      "support": "6042"
+    },
+    "Collaboration": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "360"
+    },
+    "ComputingFacility": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "588"
+    },
+    "Database": {
+      "precision": 0.039832285115303984,
+      "recall": 0.06397306397306397,
+      "f1-score": 0.04909560723514212,
+      "support": "297"
+    },
+    "Dataset": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "339"
+    },
+    "EntityOfFutureInterest": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "304"
+    },
+    "Event": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "55"
+    },
+    "Fellowship": {
+      "precision": 0.30246913580246915,
+      "recall": 0.41245791245791247,
+      "f1-score": 0.34900284900284906,
+      "support": "594"
+    },
+    "Formula": {
+      "precision": 0.03571428571428571,
+      "recall": 0.00041649312786339027,
+      "f1-score": 0.0008233841086867024,
+      "support": "2401"
+    },
+    "Grant": {
+      "precision": 0.2763521515988946,
+      "recall": 0.4168320762207225,
+      "f1-score": 0.33235736329825116,
+      "support": "5038"
+    },
+    "Identifier": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "146"
+    },
+    "Instrument": {
+      "precision": 0.1348314606741573,
+      "recall": 0.014760147601476014,
+      "f1-score": 0.02660753880266075,
+      "support": "813"
+    },
+    "LOC": {
+      "precision": 0.550477773161612,
+      "recall": 0.6318550309966618,
+      "f1-score": 0.5883658969804617,
+      "support": "2097"
+    },
+    "Mission": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "170"
+    },
+    "Model": {
+      "precision": 0.09320905459387484,
+      "recall": 0.029585798816568046,
+      "f1-score": 0.04491498235482836,
+      "support": "2366"
+    },
+    "ORG": {
+      "precision": 0.6181219626900768,
+      "recall": 0.7556535070908394,
+      "f1-score": 0.6800034491678884,
+      "support": "10436"
+    },
+    "ObservationalTechniques": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "61"
+    },
+    "Observatory": {
+      "precision": 0.35382685069008785,
+      "recall": 0.49430324276950044,
+      "f1-score": 0.4124314442413162,
+      "support": "1141"
+    },
+    "PER": {
+      "precision": 0.8942026492344745,
+      "recall": 0.8750841750841751,
+      "f1-score": 0.8845401174168298,
+      "support": "5940"
+    },
+    "Proposal": {
+      "precision": 0.20187793427230047,
+      "recall": 0.27044025157232704,
+      "f1-score": 0.23118279569892475,
+      "support": "159"
+    },
+    "Software": {
+      "precision": 0.7047244094488189,
+      "recall": 0.16097122302158273,
+      "f1-score": 0.2620790629575403,
+      "support": "1112"
+    },
+    "Survey": {
+      "precision": 0.33174603174603173,
+      "recall": 0.2284153005464481,
+      "f1-score": 0.27055016181229774,
+      "support": "915"
+    },
+    "Tag": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "74"
+    },
+    "Telescope": {
+      "precision": 0.20249017038007863,
+      "recall": 0.16427432216905902,
+      "f1-score": 0.18139125330202524,
+      "support": "1881"
+    },
+    "TextGarbage": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": "192"
+    },
+    "URL": {
+      "precision": 0.9678456591639871,
+      "recall": 0.86,
+      "f1-score": 0.9107413010590014,
+      "support": "350"
+    },
+    "Wavelength": {
+      "precision": 0.6222222222222222,
+      "recall": 0.008886067914947636,
+      "f1-score": 0.017521902377972465,
+      "support": "3151"
+    },
+    "micro avg": {
+      "precision": 0.5205520072992701,
+      "recall": 0.4528245728912435,
+      "f1-score": 0.4843320564109638,
+      "support": "50397"
+    },
+    "macro avg": {
+      "precision": 0.2413306282876466,
+      "recall": 0.20330791621761113,
+      "f1-score": 0.20004597270004065,
+      "support": "50397"
+    },
+    "weighted avg": {
+      "precision": 0.4670356481316978,
+      "recall": 0.4528245728912435,
+      "f1-score": 0.42786069443750496,
+      "support": "50397"
+    }
+  }
+}
