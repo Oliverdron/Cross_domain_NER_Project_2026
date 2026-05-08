@@ -1,0 +1,14 @@
+{
+  "iteration": 0,
+  "seed": 42,
+  "baseline": "astro_only",
+  "n_target_examples": 0,
+  "n_target_units": 0,
+  "target_fraction": "",
+  "train_time_sec": 4361.063477754593,
+  "best_epoch": 53,
+  "best_dev_f1": 0.7659167928473575,
+  "epochs_run": 61,
+  "peak_gpu_mem_mb": 11763,
+  "truncation_count": 951
+}

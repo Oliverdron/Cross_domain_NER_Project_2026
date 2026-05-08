@@ -1,0 +1,31 @@
+{
+  "baseline": "conll_only",
+  "spec": {
+    "train_path": "data/news_train.iob2",
+    "dev_path": "data/news_dev.iob2",
+    "ds_name": "conll",
+    "unit": "sentence",
+    "max_seq_len": 512,
+    "batch_size": 32,
+    "token_col": 0,
+    "tag_col": 1
+  },
+  "defaults": {
+    "model_name": "google-bert/bert-base-cased",
+    "tokenizer_name": "google-bert/bert-base-cased",
+    "learning_rate": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "num_epochs": 300,
+    "early_stopping_patience": 8
+  },
+  "eval_sets": [
+    "ewt_dev",
+    "conll_test",
+    "astro_test"
+  ],
+  "n_train": 14041,
+  "n_dev": 3250,
+  "trunc_train": 0,
+  "trunc_dev": 0
+}

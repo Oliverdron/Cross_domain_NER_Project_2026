@@ -1,0 +1,14 @@
+{
+  "iteration": 0,
+  "seed": 42,
+  "baseline": "conll_only",
+  "n_target_examples": 0,
+  "n_target_units": 0,
+  "target_fraction": "",
+  "train_time_sec": 1081.8588614463806,
+  "best_epoch": 13,
+  "best_dev_f1": 0.9593382499501694,
+  "epochs_run": 21,
+  "peak_gpu_mem_mb": 5004,
+  "truncation_count": 0
+}
