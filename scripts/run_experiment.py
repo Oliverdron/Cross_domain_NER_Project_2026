@@ -204,6 +204,14 @@ def main():
             print(f"\n── seed {seed}, iter {k} ─────────────────────────────")
             iter_dir = init_iter_dir(cfg.output_dir, cfg.experiment_name, seed, k)
 
+            # ── Resume: skip if this (seed, iter) already completed ────────
+            # metrics.json is written near the end of the iter body; if it
+            # exists, the iteration produced its outputs (per-iter files +
+            # summary.csv rows). Safe to skip on resubmission after a TIMEOUT.
+            if (iter_dir / "metrics.json").exists():
+                print(f"  ⏩ already complete (metrics.json present) — skipping")
+                continue
+
             target_chunk_ids = slice_for_iter(pool_ids, n_target)
             target_chunk     = select_examples(target_train, target_chunk_ids)
             mix              = source_train + target_chunk

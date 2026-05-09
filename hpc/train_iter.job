@@ -21,7 +21,7 @@
 # Smoke test verified the pipeline; F1 scores are GPU-invariant.
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
-#SBATCH --time=2-00:00:00                    # 2 days; acltr allows up to 3 for students
+#SBATCH --time=2-00:00:00                    # 48h; acltr allows up to 3 days for students
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT_80   # email on start, success, failure, 80% wall-time
