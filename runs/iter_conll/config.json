@@ -1,0 +1,86 @@
+{
+  "config": {
+    "experiment_name": "iter_conll",
+    "output_dir": "runs/",
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "model_name": "google-bert/bert-base-cased",
+    "tokenizer_name": "google-bert/bert-base-cased",
+    "max_seq_len": 512,
+    "batch_size": 32,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "num_epochs": 300,
+    "early_stopping_patience": 8,
+    "source": {
+      "name": "ewt",
+      "train": "data/universal_train.iob2",
+      "dev": "data/universal_dev.iob2",
+      "unit": "sentence"
+    },
+    "target": {
+      "name": "conll",
+      "train": "data/news_train.iob2",
+      "dev": "data/news_dev.iob2",
+      "test": "data/news_test.iob2",
+      "unit": "sentence"
+    },
+    "eval_sets": {
+      "ewt_dev": "data/universal_dev.iob2",
+      "conll_test": "data/news_test.iob2",
+      "astro_test": "data/astro_test.iob2"
+    },
+    "schedule": [
+      0,
+      150,
+      200,
+      250,
+      320,
+      410,
+      530,
+      680,
+      875,
+      1125,
+      1450,
+      1875,
+      2400,
+      3100,
+      4000,
+      5100,
+      6600,
+      8500,
+      10900,
+      14000
+    ],
+    "data_dir": "data",
+    "block_size": 30,
+    "raw_yaml_path": "/home/olgy/Cross_domain_NER_Project_2026/experiments/config_conll.yaml"
+  },
+  "git_commit": "1d796730198d69cfdcf679f1085aba34dc0f1142",
+  "dataset_sha256": {
+    "source.train": "647b296624433d2b0f304f81974404fb1d5ed1520cc05649b4646f5777a5497d",
+    "source.dev": "0cafd881cf31d39897b6d588420fab8fbbe4423d271725c59921ac9dd49c0713",
+    "target.train": "fcbf6fb1ff226d17111e25d79fd1dfc9f768177fed278f14d4e77b27a7b0fd18",
+    "target.dev": "c2a285c3ab24e58d05b43a1afb050c29acbf09b4d175e3197a517544abd1ff92",
+    "target.test": "3cac49eb9986ead18a2310761315b1e65f0ec18ebf3be1fe1cdd650ed80852c5",
+    "eval.ewt_dev": "0cafd881cf31d39897b6d588420fab8fbbe4423d271725c59921ac9dd49c0713",
+    "eval.conll_test": "3cac49eb9986ead18a2310761315b1e65f0ec18ebf3be1fe1cdd650ed80852c5",
+    "eval.astro_test": "0f01e38c47aac61b4e124a6ecd0f7d174744ccec15106ab3f372466084308598"
+  },
+  "tokenizer": {
+    "class": "BertTokenizer",
+    "name_or_path": "google-bert/bert-base-cased",
+    "transformers_version": "5.7.0"
+  },
+  "machine": {
+    "platform": "Linux-4.18.0-553.120.1.el8_10.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.15",
+    "torch": "2.5.1+cu121",
+    "cuda": true,
+    "gpu": "Tesla V100-PCIE-32GB"
+  }
+}
