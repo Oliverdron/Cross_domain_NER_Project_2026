@@ -1,12 +1,3 @@
-# Iterative cross-domain NER experiment — target = CoNLL-2003 (news)
-#
-# Source = EWT (full universal_train.iob2). Each iteration k uses
-# schedule[k] target sentences from a seed-shuffled injection pool.
-# Model is re-initialised from the pretrained checkpoint at every iteration.
-#
-# Schedule unit: 1 sentence (matches target.unit). Note that 1 astro paragraph
-# ≈ 5 EWT sentences ≈ 1 unit (handled in analysis, not auto-converted).
-
 experiment_name: iter_conll
 output_dir: runs/
 data_dir: data

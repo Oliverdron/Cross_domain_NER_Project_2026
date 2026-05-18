@@ -1,10 +1,10 @@
-experiment_name: iter_astro
+experiment_name: astro_scibert
 output_dir: runs/
 data_dir: data
 seeds: [42, 123, 456]
 
-model_name: google-bert/bert-base-cased
-tokenizer_name: google-bert/bert-base-cased
+model_name: allenai/scibert_scivocab_cased
+tokenizer_name: allenai/scibert_scivocab_cased
 
 max_seq_len: 512
 batch_size: 32

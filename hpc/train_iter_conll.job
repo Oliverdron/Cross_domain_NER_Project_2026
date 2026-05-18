@@ -1,0 +1,72 @@
+#!/bin/bash
+# ──────────────────────────────────────────────────────────────────────────────
+# train_iter.job
+#
+# Runs scripts/run_experiment.py for one config (CoNLL or Astro) on a V100.
+#
+# Submit with the config picked at submit time:
+#   sbatch --job-name=iter_conll --export=ALL,CFG=experiments/config_conll.yaml hpc/train_iter.job
+#   sbatch --job-name=iter_astro --export=ALL,CFG=experiments/config_astro.yaml hpc/train_iter.job
+#
+# Outputs land in:
+#   /home/olgy/Cross_domain_NER_Project_2026/runs/<experiment_name>/...
+# (controlled by the YAML's `output_dir` + `experiment_name`)
+# ──────────────────────────────────────────────────────────────────────────────
+#SBATCH --output=hpc/logs/%x_%j.out          # %x = job-name, %j = job id
+#SBATCH --error=hpc/logs/%x_%j.err
+#SBATCH --partition=acltr
+#SBATCH --gres=gpu:1
+# Any modern GPU (V100, A100, H100, L40s, RTX6000, A30) works fine —
+# bert-base peaks at ~2 GB GPU memory, so even consumer cards fit.
+# Smoke test verified the pipeline; F1 scores are GPU-invariant.
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=48G
+#SBATCH --time=2-00:00:00                    # 48h; acltr allows up to 3 days for students
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --mail-type=BEGIN,END,FAIL,TIME_LIMIT_80   # email on start, success, failure, 80% wall-time
+#SBATCH --mail-user=olgy@itu.dk
+
+set -euo pipefail
+
+# ── Inputs ───────────────────────────────────────────────────────────────────
+CFG="${CFG:-experiments/config_conll_scibert.yaml}"   # default if not exported
+
+# ── Paths ────────────────────────────────────────────────────────────────────
+PROJECT_DIR="/home/olgy/Cross_domain_NER_Project_2026"
+ENV_NAME="ner"
+export TMPDIR="/home/olgy/tmp"
+mkdir -p "${TMPDIR}" "${PROJECT_DIR}/hpc/logs"
+
+cd "${PROJECT_DIR}"
+
+# ── Modules + conda env ──────────────────────────────────────────────────────
+module purge
+module load Anaconda3
+module load CUDA/12.1.1
+
+source activate "${ENV_NAME}"
+
+# Cache HF downloads in /home/olgy/.cache so the model is fetched once and
+# re-used across iterations / re-submissions.
+export HF_HOME="/home/olgy/.cache/huggingface"
+mkdir -p "${HF_HOME}"
+
+# Determinism-friendly knobs (does not slow us down meaningfully here).
+export PYTHONUNBUFFERED=1
+export TOKENIZERS_PARALLELISM=false
+
+# ── Diagnostics — show up in the .out so you can debug if it breaks ─────────
+echo "── env ──"
+hostname
+date
+echo "CFG = ${CFG}"
+nvidia-smi
+python -c "import torch; print('cuda available:', torch.cuda.is_available(), '| device:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)"
+
+# ── Train ────────────────────────────────────────────────────────────────────
+echo "── starting run_experiment.py ──"
+srun python -u scripts/run_experiment.py --config "${CFG}" --device cuda
+
+echo "── done ──"
+date

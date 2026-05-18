@@ -30,7 +30,7 @@
 set -euo pipefail
 
 # ── Inputs ───────────────────────────────────────────────────────────────────
-CFG="${CFG:-experiments/config_conll.yaml}"   # default if not exported
+CFG="${CFG:-experiments/config_astro_scibert.yaml}"   # default if not exported
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 PROJECT_DIR="/home/olgy/Cross_domain_NER_Project_2026"

@@ -1,10 +1,10 @@
-experiment_name: iter_astro
+experiment_name: conll_scibert
 output_dir: runs/
 data_dir: data
 seeds: [42, 123, 456]
 
-model_name: google-bert/bert-base-cased
-tokenizer_name: google-bert/bert-base-cased
+model_name: allenai/scibert_scivocab_cased
+tokenizer_name: allenai/scibert_scivocab_cased
 
 max_seq_len: 512
 batch_size: 32
@@ -12,13 +12,13 @@ learning_rate: 5.0e-5
 weight_decay: 0.01
 warmup_ratio: 0.1
 num_epochs: 300
-block_size: 1
+block_size: 30
 early_stopping_patience: 8
 
 # Cumulative target example counts per iteration. Iter k uses schedule[k]
-# target paragraphs from the seed-shuffled injection pool. Length defines
+# target sentences from the seed-shuffled injection pool. Length defines
 # total iterations.
-schedule: [0, 5, 7, 10, 15, 20, 25, 35, 50, 70, 95, 130, 180, 250, 350, 490, 675, 935, 1300, 1800]
+schedule: [0, 150, 200, 250, 320, 410, 530, 680, 875, 1125, 1450, 1875, 2400, 3100, 4000, 5100, 6600, 8500, 10900, 14000]
 
 source:
   name: ewt
@@ -27,11 +27,11 @@ source:
   unit:  sentence
 
 target:
-  name: astro
-  train: data/astro_train.iob2
-  dev:   data/astro_dev.iob2
-  test:  data/astro_test.iob2
-  unit:  paragraph
+  name: conll
+  train: data/news_train.iob2
+  dev:   data/news_dev.iob2
+  test:  data/news_test.iob2
+  unit:  sentence
 
 # EWT test (universal_test_masked.iob2) has masked gold tags → use ewt_dev as
 # the source-forgetting probe.
