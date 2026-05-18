@@ -49,13 +49,13 @@ fi
 # ── 3. Activate it (legacy `source activate` works without conda init) ──────
 source activate "${ENV_NAME}"
 
-# ── 4. Install pytorch with CUDA 12.1 wheels, then the rest ─────────────────
-# The cu121 wheels bundle their own CUDA runtime, so this works whether or not
-# `module load CUDA/12.1.1` is loaded at runtime — but we still load it in
-# train jobs to match ITU's conventions and to expose nvcc if anything needs it.
-echo "[install_env] Installing pytorch (cu121)…"
-pip install --no-cache-dir \
-    torch --index-url https://download.pytorch.org/whl/cu121
+# ── 4. Install pytorch with CUDA 12.6 wheels, then the rest ─────────────────
+# Need torch >= 2.6 to load legacy .bin model files (CVE-2025-32434 fix in
+# transformers >= 5.x). cu121 wheels max out at torch 2.5.1, so we use cu126
+# wheels which bundle CUDA 12.6 runtime (works fine with driver 560.35.03+).
+echo "[install_env] Installing pytorch (cu126, >= 2.6)…"
+pip install --no-cache-dir --upgrade \
+    torch --index-url https://download.pytorch.org/whl/cu126
 
 echo "[install_env] Installing project requirements…"
 pip install --no-cache-dir \
