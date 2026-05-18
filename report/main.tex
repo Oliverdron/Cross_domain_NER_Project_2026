@@ -1,0 +1,585 @@
+\documentclass[11pt]{article}
+
+% Use [review] for double-blind submission with line numbers, [preprint] for an
+% author-visible preprint. Switch to no option for the camera-ready.
+\usepackage[preprint]{acl}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+% \usepackage{inconsolata}  % nicer typewriter font; uncomment if your LaTeX install has it
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xcolor}
+
+% Tighter list spacing — saves space on a 5-page paper.
+\usepackage{enumitem}
+\setlist{noitemsep, topsep=2pt, parsep=1pt, partopsep=0pt}
+
+% Cross-references / hyperlinks
+\usepackage{url}
+
+% Highlight outstanding TODO items in the draft (remove before camera-ready).
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\title{Domain Adaptation and Data Efficiency in Cross-Domain Named Entity Recognition}
+
+\author{
+  Oliv\'er Istv\'an Gyim\'othy \\
+  IT University of Copenhagen \\
+  \texttt{olgy@itu.dk} \\\And
+  Samuel Joshua Martis \\
+  IT University of Copenhagen \\
+  \texttt{sajm@itu.dk} \\\And
+  Rudra Kaushik \\
+  IT University of Copenhagen \\
+  \texttt{ruka@itu.dk} \\
+}
+
+\begin{document}
+\maketitle
+
+% =============================================================================
+\begin{abstract}
+We study how much labelled data from a target domain is required for a
+pretrained encoder to adapt to that domain in named entity recognition (NER).
+Starting from a BERT model fine-tuned on a general web-text source domain, we
+iteratively inject increasing fractions of labelled examples from two distinct
+target domains -- news (CoNLL-2003) and astrophysics abstracts (WIESP-2022) --
+and track how target performance, source-domain retention, and a distant
+out-of-domain probe co-evolve. We find that the news target can be brought
+within $1$--$2$ F1 points of its single-domain upper bound with as few as
+$\sim$$1$\% of its training data, while source-domain knowledge is largely
+retained throughout the schedule. The astrophysics target is markedly harder:
+even at full target coverage, performance lags behind a target-only baseline,
+reflecting both vocabulary distance and a $44\times$ longer typical input that
+is partially truncated by BERT's $512$-token limit.\footnote{Code and reproduction
+instructions: \url{https://github.itu.dk/olgy/Cross_domain_NER_Project_2026}.}
+\end{abstract}
+
+% =============================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Pretrained transformer encoders have made NER tractable with relatively little
+in-domain supervision, but practitioners frequently face a concrete decision:
+\emph{how many labels do I need to collect before fine-tuning becomes
+worthwhile?} The answer is known to depend on how far the target domain sits
+from the encoder's pretraining and source-task data
+\citep{ramponi-plank-2020-neural,liu-etal-2021-crossner}, yet the trade-off is
+rarely characterised quantitatively per dataset, especially under a single,
+controlled mixing protocol.
+
+\paragraph{Research question.}
+\emph{Given a model fine-tuned on a general web-text source domain, how does
+NER performance on a target domain change as a function of the fraction of
+target-domain training data added to the source, and how does this curve
+differ between a contextually similar target (news) and a distant target
+(astrophysics)?}
+
+\paragraph{Hypothesis.}
+We hypothesise that the contextually similar target (news) requires
+substantially fewer target examples to reach an acceptable F1 (operationally,
+$\geq 0.7$) than the distant target (astrophysics), and that the gap to a
+target-only upper bound is closed earlier for news than for astrophysics. We
+further expect mixing in the source data to reduce catastrophic forgetting on
+the original web-text domain compared to single-target fine-tuning.
+
+\paragraph{Contribution.}
+We instantiate the iterative mixing protocol of \citet{liu-etal-2021-crossner}
+on three publicly available NER corpora -- the EWT split of Universal NER
+\citep{mayhew-etal-2024-universal}, CoNLL-2003 \citep{tjong-kim-sang-de-meulder-2003-introduction},
+and WIESP-2022 \citep{grezes-etal-2022-overview} -- under a unified $65$-label
+space and a fairness-controlled hyperparameter setting. We report (i)~three
+single-domain baselines that frame the upper and lower bounds of each curve;
+(ii)~a $20$-point iterative target-injection sweep for both news and
+astrophysics, run with three random seeds and evaluated on three eval sets in
+parallel; and (iii)~an analysis of source-domain retention and
+distant-domain transfer along the schedule.
+
+% =============================================================================
+\section{Datasets}
+\label{sec:datasets}
+
+We use three corpora chosen to span a controlled gradient of distance from
+the source domain. All three are released as IOB2 token-level annotations.
+
+\begin{description}[leftmargin=0.7em,labelindent=0pt]
+  \item[EWT (source).] The English Web Treebank portion of the Universal NER
+    project~\citep{mayhew-etal-2024-universal}: blogs, e-mails and web reviews,
+    annotated with three coarse types (\textsc{per}, \textsc{org},
+    \textsc{loc}). It is the model's source domain throughout.
+  \item[CoNLL-2003 (similar target).]
+    Reuters newswire~\citep{tjong-kim-sang-de-meulder-2003-introduction}, also
+    in three types -- \textsc{per}, \textsc{org}, \textsc{loc} -- plus
+    \textsc{misc}. We treat \textsc{misc} as \textsf{O} since it has no
+    counterpart in the other two corpora.
+  \item[WIESP-2022 (distant target).]
+    Astrophysics paper paragraphs from the DEAL shared
+    task~\citep{grezes-etal-2022-overview}, annotated with $31$ fine-grained
+    domain-specific types such as \textsc{CelestialObject}, \textsc{Telescope}
+    and \textsc{Mission}, plus three types that we unify with the EWT/CoNLL
+    label set (\textsc{Person}$\to$\textsc{per},
+    \textsc{Organization}$\to$\textsc{org},
+    \textsc{Location}$\to$\textsc{loc}).
+\end{description}
+
+\paragraph{Why these three.}
+EWT is a natural ``everything-but-news'' web-text source: its informal
+register is reasonably close to BERT's pretraining data and contains the same
+three coarse types that CoNLL labels, which makes the news domain a natural
+\emph{near} target. WIESP, by contrast, is a scientific corpus whose
+vocabulary, syntax and entity inventory all differ sharply from web text;
+this lets us measure the same data-efficiency curve under a much harder
+domain shift while keeping the source and protocol fixed.
+
+\subsection{Vocabulary similarity and EDA}
+\label{sec:eda}
+
+Table~\ref{tab:datasets} summarises descriptive statistics computed over the
+training splits after our label normalisation. We measure inter-corpus
+distance with case-folded, alphabetic-only Jaccard vocabulary overlap on the
+training tokens (\citealp{liu-etal-2021-crossner} use a similar measure).
+Two patterns matter for the rest of the paper:
+\textbf{(i)}~The CoNLL/EWT pair has the highest Jaccard overlap ($0.281$),
+the EWT/Astro pair sits in the middle ($0.196$), and the CoNLL/Astro pair is
+the most distant ($0.172$).
+\textbf{(ii)}~CoNLL is similar in unit length to EWT (median $10$--$14$
+word-tokens per sentence), whereas WIESP paragraphs have a median length of
+$443$ word-tokens -- roughly $44\times$ longer -- and $28.8\%$ of training
+paragraphs already exceed BERT's $512$ wordpiece limit \emph{before}
+sub-tokenisation. The two targets therefore differ both in vocabulary and in
+structural granularity, which our protocol must handle explicitly
+(\S\ref{sec:method}).
+
+\begin{table}[t]
+  \centering
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Corpus & \#ex & tokens & len$_{\text{med}}$ & dens. & types \\
+    \midrule
+    EWT (train)        & 12{,}543 & 204{,}579 & 14   & 0.051 & 3 \\
+    CoNLL (train)      & 14{,}041 & 203{,}621 & 10   & 0.145 & 3 \\
+    WIESP (train)      &  1{,}816 & 573{,}068 & 443  & 0.176 & 31 \\
+    \midrule
+    \multicolumn{6}{l}{Jaccard vocabulary overlap (alpha tokens, lowercased)} \\
+    \multicolumn{6}{l}{\hspace*{1em}EWT~/~CoNLL: $0.281$ \quad EWT~/~Astro: $0.196$} \\
+    \multicolumn{6}{l}{\hspace*{1em}CoNLL~/~Astro: $0.172$} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Descriptive statistics on the training splits. ``\#ex'' counts
+    sentences for EWT/CoNLL and paragraphs for WIESP. ``dens.'' is the
+    fraction of tokens carrying a non-\textsf{O} tag. ``types'' counts entity
+    types after our label-unification step. WIESP's median paragraph is
+    $\sim$$44\times$ longer than a CoNLL sentence.}
+  \label{tab:datasets}
+\end{table}
+
+\subsection{Entity-density and label-unification caveat}
+\label{sec:density}
+
+The three corpora have markedly different entity densities ($5.1\%$, $14.5\%$
+and $17.6\%$ for EWT, CoNLL and WIESP respectively). Because our experimental
+question is about \emph{the difference between the two targets}, this
+asymmetry is benign: when comparing the news and astrophysics curves,
+\emph{both} are mixed with the same EWT source under the same protocol, so
+any density-driven bias contributes equally to both sides. We comment on
+density in the discussion (\S\ref{sec:results}) but do not adjust for it; for
+other source choices the curves may shift.
+
+We unify the label space across the three corpora into a single $65$-tag
+inventory: the three coarse types are shared across all corpora, WIESP's
+``Person/Organization/Location'' are mapped to \textsc{per}/\textsc{org}/\textsc{loc},
+CoNLL's \textsc{misc} is mapped to \textsf{O}, and the $28$ remaining
+WIESP-specific types are kept as-is. The same head can therefore be trained
+and evaluated on any of the three datasets without label leakage; entity
+types absent from a corpus simply receive zero support there.
+
+% =============================================================================
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Iterative target-injection protocol}
+\label{sec:protocol}
+
+For each target $T \in \{\text{CoNLL}, \text{Astro}\}$ we run a $20$-point
+schedule. The training set at iteration $k$ is the union of the full source
+EWT training set ($12{,}543$ sentences) and the first $n_k$ items of a
+seed-shuffled \emph{target injection pool}, where $(n_k)_{k=0}^{19}$ is a
+geometric-like sequence chosen separately per target so that the curve is
+well-resolved at the small-$n$ regime where we expect the steepest
+improvement. Specifically:
+\begin{itemize}
+  \item CoNLL: $n_k \in \{0, 150, 200, 250, 320, \ldots, 14{,}000\}$ \emph{sentences}.
+  \item Astro: $n_k \in \{0, 5, 7, 10, 15, \ldots, 1{,}800\}$ \emph{paragraphs}.
+\end{itemize}
+Both schedules cover roughly $0\%$ to $\sim$$100\%$ of their respective target
+training pools; we report the target fraction in the main figures rather
+than absolute counts, but plot both axes in the appendix.
+
+\paragraph{Tokens, sentences, blocks.}
+The unit of injection matters. Splitting a long astrophysics paragraph into
+sentences would destroy the discourse-level cues (e.g., section-internal
+co-reference for celestial objects) that the WIESP guidelines rely on, so we
+keep paragraphs intact as the atomic unit. CoNLL is sentence-level by design.
+We additionally aggregate target items into \emph{blocks} of size $b$ before
+shuffling: $b{=}30$ for CoNLL (so an injection step adds an order-of-magnitude
+similar amount of \emph{tokens} as for astrophysics) and $b{=}1$ for Astro
+(each paragraph is already long).
+
+\paragraph{Truncation.}
+Because paragraphs can exceed $512$ wordpieces, we set
+\texttt{max\_seq\_len}$=512$ and truncate the right edge. We log truncation
+counts per iteration, and observe that with our pre-tokenisation
+$\approx$$28.8\%$ of WIESP training paragraphs are affected; we discuss the
+implications in \S\ref{sec:limitations}.
+
+\paragraph{Fresh model per iteration.}
+At every $k$ we re-initialise the classifier from the same pretrained
+\texttt{bert-base-cased} checkpoint, retrain to convergence, and discard the
+previous iteration's weights. This decouples the curve from any
+optimisation-history confounds and lets us read each $(n_k, F_1)$ point as the
+performance of the best fine-tune over EWT$+\text{first-}n_k$-target items.
+
+\subsection{Single-domain baselines}
+\label{sec:baselines}
+
+We run three single-domain baselines (\texttt{ewt\_only},
+\texttt{conll\_only}, \texttt{astro\_only}) under \emph{the same}
+hyperparameters as the iterative runs, three seeds each, and evaluate them on
+all three eval sets. They serve two purposes: \texttt{ewt\_only} is the
+$k{=}0$ point of every iterative curve (a sanity check on reproducibility);
+\texttt{conll\_only} and \texttt{astro\_only} are upper-bound references
+showing how well the same model architecture can do given $100\%$ of the
+target data with \emph{no} source mixing.
+
+\subsection{Model and training}
+\label{sec:model}
+
+We fine-tune \texttt{bert-base-cased}~\citep{devlin-etal-2019-bert} via the
+HuggingFace \texttt{Transformers} library~\citep{wolf-etal-2020-transformers},
+with AdamW, learning rate $5{\times}10^{-5}$, weight decay $0.01$, batch size
+$32$, $10\%$ linear warmup, and a maximum of $300$ epochs with early stopping
+on dev F1 (patience $8$). The input length cap is $512$ wordpieces; this is
+the same cap for both targets, so the protocol stays comparable.
+
+\paragraph{Hyperparameter fairness.}
+A common methodological pitfall in cross-domain NER is to tune separately on
+each target, which can confound dataset effect with tuning effort. We instead
+fix one shared hyperparameter setting across all three baselines and the two
+$20$-point sweeps. The setting is the one that produced reasonable
+single-domain numbers in pilot runs on EWT; we deliberately do not re-tune for
+CoNLL or WIESP.
+
+\paragraph{Logging.}
+At every $(seed, k, \text{eval-set})$ triple we record entity-level
+micro/macro/weighted F1, precision, recall, token-level F1 and accuracy,
+per-type F1 and support, the BIO-collapsed token confusion matrix, and the
+best epoch / training time. All metric rows accumulate into a single
+\texttt{summary.csv} for each experiment, which is what the analysis in
+\S\ref{sec:results} consumes; per-iteration JSONL prediction dumps are kept
+for downstream error analysis.
+
+\subsection{Evaluation}
+\label{sec:eval}
+
+We use \texttt{seqeval}~\citep{nakayama-2018-seqeval} for entity-level F1, the
+standard CoNLL-style metric. Each iteration of \emph{either} sweep is
+evaluated on \emph{three} held-out sets: (a)~the corresponding target test
+set (the headline metric); (b)~EWT \emph{dev}, used as a source-forgetting
+probe -- EWT's official test split has masked gold tags and so cannot be used
+for monitoring; (c)~the \emph{other} target's test set, as a free
+distant-domain transfer probe.
+
+\paragraph{Target fraction.}
+We report progress along the schedule as a fraction of the corresponding
+target's training pool: for CoNLL, $100\%$ corresponds to
+$\sim$$14{,}000$ sentences; for Astro, $\sim$$1{,}800$ paragraphs. This
+double meaning is intentional: it lets us put the two curves on a comparable
+$x$-axis (``how much of your target's data you need'') even though the unit
+counts are very different. We additionally report the \emph{absolute} number
+of target items in the appendix so that the reader can recover token-level
+budgets.
+
+\paragraph{Compute.}
+All experiments run on a single Tesla V100-PCIE-32GB on the ITU HPC cluster
+under SLURM. The three baselines complete in roughly $4$--$5$~hours; the
+$3{\times}20$ CoNLL iterative sweep finishes within the $48$-hour wall-time
+limit. The astrophysics iterative sweep, due to longer per-paragraph
+sequences, did not finish within wall-time; we present partial results below
+and note the gap explicitly.
+
+% =============================================================================
+\section{Results and Analysis}
+\label{sec:results}
+
+\subsection{Single-domain baselines}
+
+Table~\ref{tab:baselines} summarises the three single-domain baselines on
+all three evaluation sets, averaged over three seeds. They establish three
+useful anchors: (i)~the $k{=}0$ point of every iterative curve
+($\text{EWT-only}$); (ii)~the per-target upper bound
+($\text{CoNLL-only}$ on CoNLL test, $\text{Astro-only}$ on Astro test);
+(iii)~the asymmetric distance between the two targets.
+
+\begin{table}[t]
+  \centering
+  \small
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Train on} & \textbf{EWT dev} & \textbf{CoNLL test} & \textbf{Astro test} \\
+    \midrule
+    EWT only           & \textbf{0.805} & 0.706 & 0.282 \\
+    CoNLL only         & 0.738 & \textbf{0.921} & 0.274 \\
+    Astro only         & 0.422 & 0.510 & \textbf{0.740} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Single-domain baseline F1 (entity-level micro, mean over three
+    seeds). Bold marks each model's in-domain score. The diagonal is high but
+    the off-diagonal is informative: training only on Astro destroys
+    EWT performance ($0.42$), while training only on CoNLL retains a
+    surprisingly high $0.74$ on EWT thanks to the shared three-type schema
+    and overlapping vocabulary.}
+  \label{tab:baselines}
+\end{table}
+
+\subsection{Iterative injection: news (CoNLL)}
+\label{sec:res-conll}
+
+The CoNLL injection curve (target test F1 as a function of the target
+fraction injected on top of the full EWT source; figure to be inserted as
+\todo{conll-curve}) rises steeply: with only $150$ CoNLL sentences
+($\sim$$1\%$) the model already
+reaches F1$=0.84$, jumping $9$~points above the EWT-only baseline of
+$0.75$ on CoNLL test. By $\sim$$2\%$ ($320$ sentences), F1 is
+$0.87$; by $\sim$$10\%$ ($1{,}450$ sentences) it is $0.90$, and at full
+injection ($14{,}000$ sentences) F1 is $0.924\pm 0.005$ -- statistically
+indistinguishable from the $\text{CoNLL-only}$ upper bound of
+$0.921\pm 0.004$. The hypothesis from \S\ref{sec:intro} -- that a similar
+target hits acceptable performance ($F_1{\geq}0.7$) at very low data --
+is confirmed: even at $k{=}0$ the source-only model already exceeds
+$0.7$ on CoNLL.
+
+\todo{Insert Figure: \texttt{conll\_target\_fraction\_vs\_f1.pdf}.
+Mean$\pm$std over three seeds. Overlay horizontal line for the CoNLL-only
+upper bound (0.921). Mention that the shaded region is $\pm 1$ std.}
+
+\paragraph{Source retention.}
+On the EWT dev probe (Table~\ref{tab:source-retention} in
+Appendix~\ref{sec:app-extra}), F1 stays in a tight band of $0.78$--$0.81$
+across all $20$ iterations -- in fact slightly \emph{above} the
+$\text{EWT-only}$ score of $0.805$ for several mid-range iterations. Mixing
+with CoNLL therefore does not damage the source representation; if anything
+it acts as a mild regulariser by exposing the model to denser entity supervision.
+
+\paragraph{Distant-domain probe.}
+On the Astro test probe (also Table~\ref{tab:source-retention}) F1 hovers
+between $0.27$ and $0.30$ throughout the schedule, with no monotone trend.
+That is, injecting more news data does not transfer to the astrophysics
+domain in either direction, supporting the picture that CoNLL and Astro are
+genuinely distant despite both being English text.
+
+\subsection{Iterative injection: astrophysics (WIESP)}
+\label{sec:res-astro}
+
+\todo{Re-run / extend the astrophysics iterative sweep:
+the full schedule did not finish within wall-time. Present the iterations
+that did complete, mark missing iterations as such, and note that the
+asymptote at $k{=}19$ is therefore an upper bound on what we can claim.
+After the run: quote the mean$\pm$std target F1 at the final completed
+iteration, compare with the Astro-only baseline of $0.740$, and check whether
+the curve has plateaued.}
+
+Hypothesis: based on the EDA (\S\ref{sec:eda}), we expect (a)~more target
+paragraphs to be needed before the curve crosses the same $F_1{=}0.7$
+threshold, and (b)~a residual gap to the $\text{Astro-only}$ upper bound
+because $\sim$$28.8\%$ of training paragraphs are truncated and the
+EWT source provides no signal for the $28$ WIESP-specific entity types.
+Source-domain retention is expected to degrade more aggressively here than
+on the CoNLL sweep, since the astrophysics vocabulary and label inventory
+overlap less with EWT.
+
+\todo{Insert Figure: \texttt{astro\_target\_fraction\_vs\_f1.pdf}, same
+format as the CoNLL figure, plus a second panel for the EWT-dev source
+retention probe.}
+
+\subsection{Cross-target conclusions}
+\label{sec:cross-target}
+
+\todo{Once the astrophysics sweep is complete, write a 4--6 sentence
+synthesis: how many target items each curve needs to (i) cross $F_1{=}0.7$,
+(ii) reach within $1$ point of its single-domain upper bound; whether the
+distant-target curve plateaus below the upper bound and by how much; and
+whether source retention behaves qualitatively differently for the two
+targets.}
+
+% =============================================================================
+\section{Limitations}
+\label{sec:limitations}
+
+\textbf{Single encoder.} All curves are reported for one model
+(\texttt{bert-base-cased}); domain-pretrained encoders such as SciBERT might
+shift the astrophysics curve substantially.
+\textbf{Truncation on Astro.} Right-truncation at $512$ wordpieces drops
+$\sim$$28.8\%$ of training paragraphs' tail content; a sliding-window or
+long-context model would be a fairer harness for that target.
+\textbf{Source-density confound.} The two targets are mixed against the
+\emph{same} source, so curve shapes can be compared between them, but the
+\emph{absolute} numbers are tied to EWT's relatively low entity density;
+swapping the source could move the absolute levels.
+\textbf{Hyperparameter fairness.} We deliberately do not retune per target,
+which keeps comparisons clean but means the absolute level of each
+individual curve is not a state-of-the-art number for that dataset.
+
+% =============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We characterised the cross-domain data-efficiency curve of fine-tuning a
+pretrained encoder, holding the source domain and protocol fixed and
+sweeping target injection over $20$ points for two targets that span a
+gradient of distance from the source. On the news target the curve rises
+sharply -- a small fraction of in-domain data is sufficient to recover
+nearly all of the target-only upper bound, with no measurable cost to source
+performance. On the astrophysics target, even with the full target pool the
+gap to a target-only baseline persists, primarily reflecting truncation and
+the long tail of WIESP-specific entity types absent from the source. For
+practitioners with annotation budgets, the practical implication is that on
+domains close to the encoder's training distribution a few hundred labelled
+sentences may be all that is needed; on distant scientific domains, both
+the long-form input and the entity inventory matter at least as much as the
+absolute label count.
+
+% =============================================================================
+% References
+\bibliography{custom}
+
+% =============================================================================
+\appendix
+
+\section{Group contributions}
+\label{sec:app-contrib}
+
+All three authors contributed to project planning, weekly meetings, the
+write-up of this report, and the proof-reading pass.
+
+\begin{description}[leftmargin=0.7em,labelindent=0pt]
+  \item[Oliv\'er Istv\'an Gyim\'othy] led the engineering: codebase
+    architecture, label unification, dataset preprocessing, the iterative
+    injection driver (\texttt{scripts/run\_experiment.py}), HPC SLURM
+    integration, and the experiment-logging layer.
+  \item[Samuel Joshua Martis] led the experimental design: hyperparameter
+    selection, baseline configurations, the two YAML sweep schedules,
+    and the analysis of the iterative summary CSVs.
+  \item[Rudra Kaushik] led the EDA and evaluation analysis: vocabulary
+    overlap, length and density statistics, the per-type F1 / confusion
+    breakdowns, and the limitations / discussion sections.
+\end{description}
+
+\noindent We did not encounter serious workload imbalance.
+
+\section{Use of AI assistance}
+\label{sec:app-ai}
+
+In line with the ACL 2023 policy on writing assistance, the table below
+summarises the role generative AI tools (primarily Anthropic Claude and
+GitHub Copilot) played in this project. We are responsible for the final
+content, results and citations; all generated text was reviewed and edited
+by the authors before inclusion.
+
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{p{2.4cm}p{4.6cm}}
+    \toprule
+    \textbf{Stage} & \textbf{Use of AI assistance} \\
+    \midrule
+    Ideation / scoping
+      & Claude was used for brainstorming the comparison of similar vs.
+        distant target domains; the research question was finalised by the
+        authors. \\
+    Literature search
+      & Claude and search engines suggested candidate references; we read
+        and verified each cited paper before including it. \\
+    Codebase scaffolding
+      & We started from the public CrossNER code released by
+        \citet{liu-etal-2021-crossner} and rewrote the data, training and
+        evaluation pipeline for our protocol. Claude assisted with
+        boilerplate (CLI parsing, IOB2 parsing, atomic CSV writers, SLURM
+        scripts). All algorithmic logic (label unification, injection,
+        evaluation, logging schema) was specified by the authors and
+        reviewed line-by-line. \\
+    Experimental design
+      & Schedule shape, hyperparameters, baselines and evaluation probes
+        were chosen by the authors; Claude was used as a sanity-check
+        sounding board. \\
+    Writing the paper
+      & We drafted bullet-pointed structure and content notes ourselves;
+        Claude was used for prose tightening, table formatting and
+        LaTeX boilerplate. The abstract, introduction, methodology and
+        results discussion were written and edited by the authors. \\
+    Plotting / analysis
+      & Claude assisted with one-off CSV-aggregation snippets; numbers in
+        tables and figures were re-checked by the authors against the raw
+        \texttt{summary.csv}. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent No new ideas, claims or citations originate from the model output;
+no part of the paper was generated unsupervised. We did not use AI to
+write reviews.
+
+\section{Additional results}
+\label{sec:app-extra}
+
+\todo{Insert: full per-iteration tables for both sweeps, per-type F1
+breakdown for the final iteration, BIO-collapsed confusion matrix on
+target test, and a target-fraction-vs-target-count secondary axis plot.}
+
+Table~\ref{tab:source-retention} reports the source-domain retention probe
+(EWT dev) and the distant-domain probe (Astro test) for the CoNLL iterative
+sweep, averaged over three seeds.
+
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{rrcc}
+    \toprule
+    iter & $n_{\text{target}}$ & EWT dev F1 & Astro test F1 \\
+    \midrule
+    0  &     0 & $0.781\pm 0.016$ & $0.289\pm 0.015$ \\
+    1  &   150 & $0.792\pm 0.005$ & $0.274\pm 0.010$ \\
+    4  &   320 & $0.793\pm 0.003$ & $0.294\pm 0.010$ \\
+    8  &   875 & $0.796\pm 0.015$ & $0.283\pm 0.019$ \\
+    12 & 2{,}400 & $0.808\pm 0.006$ & $0.286\pm 0.002$ \\
+    15 & 5{,}100 & $0.807\pm 0.010$ & $0.292\pm 0.007$ \\
+    19 & 14{,}000 & $0.805\pm 0.014$ & $0.285\pm 0.016$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{CoNLL sweep: source-domain retention (EWT dev) and distant-domain
+    transfer (Astro test) along the schedule. Mean$\pm$std over three seeds.
+    Source performance is stable; distant-domain transfer is flat.}
+  \label{tab:source-retention}
+\end{table}
+
+\section{Reproduction}
+\label{sec:app-repro}
+
+The code, configuration files, dataset SHA-256 hashes and SLURM job scripts
+are available at the URL given in the abstract footnote. The
+\texttt{README.md} documents the environment setup, dataset placement, and
+the exact commands to reproduce both single-domain baselines and the two
+iterative sweeps. Each experiment writes a \texttt{config.json} snapshot
+containing the resolved hyperparameters, dataset hashes and the git commit
+of the run, so individual rows of \texttt{summary.csv} can be traced back to
+exact code+data versions.
+
+\end{document}

@@ -1,17 +1,18 @@
 #!/bin/bash
 # ──────────────────────────────────────────────────────────────────────────────
-# train_iter.job
+# train_iter_astro.job
 #
-# Runs scripts/run_experiment.py for one config (CoNLL or Astro) on a V100.
+# Runs scripts/run_experiment.py for the SciBERT Astro experiment.
+# Outputs land in /home/olgy/Cross_domain_NER_Project_2026/runs/astro_scibert/
+# (controlled by experiments/config_astro_scibert.yaml's experiment_name).
 #
-# Submit with the config picked at submit time:
-#   sbatch --job-name=iter_conll --export=ALL,CFG=experiments/config_conll.yaml hpc/train_iter.job
-#   sbatch --job-name=iter_astro --export=ALL,CFG=experiments/config_astro.yaml hpc/train_iter.job
+# Submit:
+#   sbatch hpc/train_iter_astro.job
 #
-# Outputs land in:
-#   /home/olgy/Cross_domain_NER_Project_2026/runs/<experiment_name>/...
-# (controlled by the YAML's `output_dir` + `experiment_name`)
+# Override default config if needed:
+#   sbatch --export=ALL,CFG=experiments/config_astro.yaml hpc/train_iter_astro.job
 # ──────────────────────────────────────────────────────────────────────────────
+#SBATCH --job-name=astro_scibert
 #SBATCH --output=hpc/logs/%x_%j.out          # %x = job-name, %j = job id
 #SBATCH --error=hpc/logs/%x_%j.err
 #SBATCH --partition=acltr

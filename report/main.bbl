@@ -1,0 +1,74 @@
+\begin{thebibliography}{8}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Devlin et~al.(2019)Devlin, Chang, Lee, and
+  Toutanova}]{devlin-etal-2019-bert}
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019.
+\newblock \href {https://doi.org/10.18653/v1/N19-1423} {{BERT}: Pre-training of
+  deep bidirectional transformers for language understanding}.
+\newblock In \emph{Proceedings of the 2019 Conference of the North {A}merican
+  Chapter of the Association for Computational Linguistics: Human Language
+  Technologies, Volume 1 (Long and Short Papers)}, pages 4171--4186.
+  Association for Computational Linguistics.
+
+\bibitem[{Grezes et~al.(2022)Grezes, Blanco-Cuaresma, Allen, Patel, Grayling,
+  Eltvedt, Joye, Garcia~Cuesta, and Accomazzi}]{grezes-etal-2022-overview}
+Felix Grezes, Sergi Blanco-Cuaresma, Thomas Allen, Ankesh Patel, Matthew
+  Grayling, John Eltvedt, Tirthankar Joye, Esteban Garcia~Cuesta, and Alberto
+  Accomazzi. 2022.
+\newblock \href {https://aclanthology.org/2022.wiesp-1.1} {Overview of the
+  first shared task on detecting entities in the astrophysics literature
+  ({DEAL})}.
+\newblock In \emph{Proceedings of the First Workshop on Information Extraction
+  from Scientific Publications}, pages 1--7.
+
+\bibitem[{Liu et~al.(2021)Liu, Xu, Yu, Dai, Ji, Cahyawijaya, Madotto, and
+  Fung}]{liu-etal-2021-crossner}
+Zihan Liu, Yan Xu, Tiezheng Yu, Wenliang Dai, Ziwei Ji, Samuel Cahyawijaya,
+  Andrea Madotto, and Pascale Fung. 2021.
+\newblock \href {https://arxiv.org/abs/2012.04373} {{C}ross{NER}: Evaluating
+  cross-domain named entity recognition}.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial
+  Intelligence}, volume~35, pages 13452--13460.
+
+\bibitem[{Mayhew et~al.(2024)Mayhew, Blevins, Liu, Sup{\'e}rant
+  et~al.}]{mayhew-etal-2024-universal}
+Stephen Mayhew, Terra Blevins, Shuheng Liu, Marek Sup{\'e}rant, and 1 others.
+  2024.
+\newblock \href {https://aclanthology.org/2024.naacl-long.243} {Universal
+  {NER}: A gold-standard multilingual named entity recognition benchmark}.
+\newblock In \emph{Proceedings of NAACL 2024}.
+
+\bibitem[{Nakayama(2018)}]{nakayama-2018-seqeval}
+Hiroki Nakayama. 2018.
+\newblock {seqeval}: A {P}ython framework for sequence labeling evaluation.
+\newblock \url{https://github.com/chakki-works/seqeval}.
+
+\bibitem[{Ramponi and Plank(2020)}]{ramponi-plank-2020-neural}
+Alan Ramponi and Barbara Plank. 2020.
+\newblock \href {https://aclanthology.org/2020.coling-main.603} {Neural
+  unsupervised domain adaptation in {NLP}---a survey}.
+\newblock In \emph{Proceedings of the 28th International Conference on
+  Computational Linguistics}, pages 6838--6855.
+
+\bibitem[{Tjong Kim~Sang and
+  De~Meulder(2003)}]{tjong-kim-sang-de-meulder-2003-introduction}
+Erik~F. Tjong Kim~Sang and Fien De~Meulder. 2003.
+\newblock \href {https://aclanthology.org/W03-0419} {Introduction to the
+  {C}o{NLL}-2003 shared task: Language-independent named entity recognition}.
+\newblock In \emph{Proceedings of the Seventh Conference on Natural Language
+  Learning at {HLT}-{NAACL} 2003}, pages 142--147.
+
+\bibitem[{Wolf et~al.(2020)Wolf, Debut, Sanh, Chaumond, Delangue, Moi, Cistac,
+  Rault, Louf, Funtowicz, Davison, Shleifer, von Platen, Ma, Jernite, Plu, Xu,
+  Le~Scao, Gugger, Drame, Lhoest, and Rush}]{wolf-etal-2020-transformers}
+Thomas Wolf, Lysandre Debut, Victor Sanh, Julien Chaumond, Clement Delangue,
+  Anthony Moi, Pierric Cistac, Tim Rault, R{\'e}mi Louf, Morgan Funtowicz, Joe
+  Davison, Sam Shleifer, Patrick von Platen, Clara Ma, Yacine Jernite, Julien
+  Plu, Canwen Xu, Teven Le~Scao, Sylvain Gugger, and 3 others. 2020.
+\newblock \href {https://aclanthology.org/2020.emnlp-demos.6} {Transformers:
+  State-of-the-art natural language processing}.
+\newblock In \emph{Proceedings of the 2020 Conference on Empirical Methods in
+  Natural Language Processing: System Demonstrations}, pages 38--45.
+
+\end{thebibliography}
