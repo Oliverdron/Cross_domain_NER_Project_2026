@@ -1,3 +1,10 @@
+"""
+trainer.py — Training loop, evaluation, and seed initialisation for BERT NER.
+
+Exports: set_seed, train, evaluate, and private decode helpers _decode_batch,
+_decode_batch_full used by the evaluation pipeline.
+"""
+
 import os
 import json
 import time
@@ -14,7 +21,13 @@ from seqeval.metrics.sequence_labeling import get_entities
 from config import ID2LABEL
 
 
-def set_seed(seed: int):
+def set_seed(seed: int) -> None:
+    """
+    Set random seeds for Python, NumPy, and PyTorch (CPU and all CUDA devices).
+
+    Args:
+        seed: integer seed value.
+    """
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)

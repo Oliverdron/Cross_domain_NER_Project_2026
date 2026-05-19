@@ -15,14 +15,26 @@ from typing import Dict, List
 
 def build_injection_pool(target_examples: List[Dict], seed: int, out_dir: str) -> List[str]:
     """
-    Deterministically shuffle target_examples by id and persist the ordering.
+    Deterministically shuffle target examples by id and persist the ordering to disk.
+
+    Seed-determinism guarantee: given the same target_examples and seed, this
+    function always produces the same id ordering across runs, machines, and Python
+    versions — because it uses a local random.Random instance seeded explicitly
+    rather than relying on the global RNG state (which may differ between runs).
 
     Writes <out_dir>/injection_order.json with:
         {seed, n, order_hash, ids: [...]}
 
-    Returns the ordered list of ids.
+    Args:
+        target_examples: list of example dicts, each with an "id" key.
+        seed:            integer seed controlling shuffle order.
+        out_dir:         directory where injection_order.json is written.
+    Returns:
+        Ordered list of example ids in the shuffled injection sequence.
     """
     ids = [ex["id"] for ex in target_examples]
+    # Local RNG instance isolates pool ordering from the global random state,
+    # so calling set_seed() before or after this function does not change the pool.
     rng = random.Random(seed)
     rng.shuffle(ids)
 
@@ -40,11 +52,27 @@ def build_injection_pool(target_examples: List[Dict], seed: int, out_dir: str) -
 
 
 def slice_for_iter(pool_ids: List[str], n_target: int) -> List[str]:
-    """First n_target ids from the pool. n_target=0 → empty list."""
+    """
+    Return the first n_target ids from the injection pool.
+
+    Args:
+        pool_ids: ordered list of ids from build_injection_pool.
+        n_target: number of examples to include; 0 returns an empty list.
+    Returns:
+        Prefix of pool_ids of length min(n_target, len(pool_ids)).
+    """
     return pool_ids[:n_target]
 
 
 def select_examples(all_examples: List[Dict], ids: List[str]) -> List[Dict]:
-    """Return examples in the order specified by `ids`."""
+    """
+    Retrieve examples from all_examples in the order given by ids.
+
+    Args:
+        all_examples: full list of target example dicts (with "id" keys).
+        ids:          ordered list of ids to select (typically from slice_for_iter).
+    Returns:
+        List of example dicts ordered by ids; ids not found in all_examples are skipped.
+    """
     by_id = {ex["id"]: ex for ex in all_examples}
     return [by_id[i] for i in ids if i in by_id]

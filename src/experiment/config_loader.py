@@ -17,47 +17,60 @@ import yaml
 
 @dataclass(frozen=True)
 class SourceCfg:
-    name: str
-    train: str
-    dev: str
-    unit: str = "sentence"
+    """Paths and metadata for the source-domain training data."""
+
+    name: str   # dataset key, e.g. "ewt" or "conll"
+    train: str  # path to source train .iob2
+    dev: str    # path to source dev .iob2
+    unit: str = "sentence"  # "sentence" or "paragraph"
 
 
 @dataclass(frozen=True)
 class TargetCfg:
-    name: str
-    train: str
-    dev: str
-    test: str
-    unit: str
+    """Paths and metadata for the target-domain data used in the injection loop."""
+
+    name: str   # dataset key, e.g. "astro"
+    train: str  # pool of target examples drawn from during injection
+    dev: str    # used for early stopping across all iterations
+    test: str   # held out; not used during training
+    unit: str   # "sentence" or "paragraph"
 
 
 @dataclass(frozen=True)
 class EvalSetCfg:
-    name: str
-    path: str
+    """A single evaluation dataset referenced by name and file path."""
+
+    name: str  # unique key used in metrics dicts and output filenames
+    path: str  # path to the .iob2 file
 
 
 @dataclass(frozen=True)
 class ExperimentConfig:
+    """
+    Complete, immutable configuration for one iterative cross-domain experiment.
+
+    Loaded from a YAML file via load_config(). All fields are frozen so downstream
+    code cannot mutate configuration mid-run.
+    """
+
     experiment_name: str
     output_dir: str
     seeds: List[int]
-    model_name: str
-    tokenizer_name: str
+    model_name: str        # HuggingFace model id for AutoModel
+    tokenizer_name: str    # HuggingFace tokenizer id (usually same as model_name)
     max_seq_len: int
     batch_size: int
     learning_rate: float
     weight_decay: float
     warmup_ratio: float
     num_epochs: int
-    early_stopping_patience: int
+    early_stopping_patience: int  # stop after N non-improving dev epochs; 0 disables
     source: SourceCfg
     target: TargetCfg
     eval_sets: List[EvalSetCfg]
-    schedule: List[int] = field(default_factory=list)
+    schedule: List[int] = field(default_factory=list)  # cumulative target counts per iter
     data_dir: str = "data"
-    block_size: int = 1
+    block_size: int = 1  # examples added per injection step (1 = one example at a time)
     raw_yaml_path: str = ""
 
     def to_dict(self) -> dict:
@@ -67,6 +80,14 @@ class ExperimentConfig:
 
 
 def load_config(yaml_path: str) -> ExperimentConfig:
+    """
+    Parse a YAML experiment config file into an ExperimentConfig dataclass.
+
+    Args:
+        yaml_path: path to the YAML file (e.g. experiments/config_conll.yaml).
+    Returns:
+        Fully populated, frozen ExperimentConfig instance.
+    """
     with open(yaml_path, "r", encoding="utf-8") as fh:
         raw = yaml.safe_load(fh)
 
@@ -98,6 +119,14 @@ def load_config(yaml_path: str) -> ExperimentConfig:
 
 
 def sha256_file(path: str) -> str:
+    """
+    Return the SHA-256 hex digest of a file, read in 1 MiB chunks.
+
+    Args:
+        path: path to the file to hash.
+    Returns:
+        64-character lowercase hex string.
+    """
     h = hashlib.sha256()
     with open(path, "rb") as fh:
         for chunk in iter(lambda: fh.read(1 << 20), b""):
@@ -106,6 +135,15 @@ def sha256_file(path: str) -> str:
 
 
 def collect_dataset_hashes(cfg: ExperimentConfig) -> Dict[str, str]:
+    """
+    Compute SHA-256 hashes for all dataset files referenced in the config.
+
+    Args:
+        cfg: loaded ExperimentConfig.
+    Returns:
+        Dict mapping logical path key (e.g. "source.train") to hex digest.
+        Files that do not exist on disk are silently omitted.
+    """
     paths = {
         "source.train": cfg.source.train,
         "source.dev":   cfg.source.dev,
@@ -119,6 +157,12 @@ def collect_dataset_hashes(cfg: ExperimentConfig) -> Dict[str, str]:
 
 
 def git_commit_hash() -> str:
+    """
+    Return the current git HEAD commit hash, or "unknown" if git is unavailable.
+
+    Returns:
+        40-character hex commit hash string, or "unknown".
+    """
     try:
         out = subprocess.run(
             ["git", "rev-parse", "HEAD"],
@@ -130,6 +174,12 @@ def git_commit_hash() -> str:
 
 
 def machine_info() -> Dict[str, str]:
+    """
+    Collect platform, Python, PyTorch, and GPU metadata for reproducibility logging.
+
+    Returns:
+        Dict with keys: platform, python, and optionally torch, cuda_avail, gpu.
+    """
     info = {
         "platform": platform.platform(),
         "python":   platform.python_version(),

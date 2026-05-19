@@ -1,5 +1,12 @@
+"""
+data.py — IOB2 parsing, tag normalisation, tokenisation, and DataLoader construction.
+
+Exports: parse_iob2, normalize_tag, entity_density, load_all_datasets,
+make_tokenize_fn, prepare_split, make_dataloader, save_predictions.
+"""
+
 import os
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Optional
 
 import torch
 from torch.utils.data import DataLoader
@@ -182,6 +189,17 @@ def make_tokenize_fn(tokenizer, max_length: int, trunc_counter: Optional[List[in
     off by truncation.
     """
     def tokenize_and_align_labels(examples):
+        """
+        Tokenise a batch of pre-tokenised sentences and align NER labels to subwords.
+
+        Args:
+            examples: batch dict with keys "tokens" (List[List[str]]) and
+                      "ner_tags" (List[List[str]]).
+        Returns:
+            tokenized dict extended with "labels" (List[List[int]]) where -100
+            marks special tokens and subword continuations, and valid positions
+            hold integer label ids from LABEL2ID.
+        """
         tokenized = tokenizer(
             examples["tokens"],
             max_length=max_length,
@@ -247,6 +265,17 @@ def prepare_split(sentences: List[Dict], tokenizer, max_length: int,
 
 def make_dataloader(dataset: Dataset, tokenizer, batch_size: int,
                     shuffle: bool = False) -> DataLoader:
+    """
+    Wrap a HuggingFace Dataset in a DataLoader with token-classification padding.
+
+    Args:
+        dataset:    tokenised HuggingFace Dataset (output of prepare_split).
+        tokenizer:  tokenizer used to determine pad token id.
+        batch_size: number of examples per batch.
+        shuffle:    whether to shuffle before each epoch (True for training).
+    Returns:
+        DataLoader that pads each batch to the longest sequence in that batch.
+    """
     collator = DataCollatorForTokenClassification(tokenizer)
     return DataLoader(dataset, batch_size=batch_size,
                       shuffle=shuffle, collate_fn=collator)

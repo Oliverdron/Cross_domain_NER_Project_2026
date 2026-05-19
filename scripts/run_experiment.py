@@ -69,21 +69,54 @@ _IOB2_COLS = {
 
 
 def _cols_for(name: str) -> Dict[str, int]:
+    """Return the IOB2 column kwargs (token_col, tag_col) for a dataset name."""
     return _IOB2_COLS.get(name.lower(), dict(token_col=0, tag_col=1))
 
 
-def _load_examples(path: str, dataset_name: str, unit: str):
+def _load_examples(path: str, dataset_name: str, unit: str) -> List[Dict]:
+    """
+    Parse an IOB2 file using the correct column mapping for the named dataset.
+
+    Args:
+        path:         path to the .iob2 file.
+        dataset_name: key used to look up column rules (e.g. "ewt", "conll", "astro").
+        unit:         "sentence" or "paragraph" passed to parse_iob2.
+    Returns:
+        List of example dicts as returned by parse_iob2.
+    """
     return parse_iob2(path, unit=unit, **_cols_for(dataset_name))
 
 
 def _build_eval_loader(examples, tokenizer, max_seq_len, batch_size, device):
+    """
+    Tokenise examples and return an unshuffled DataLoader plus the truncation count.
+
+    Args:
+        examples:    list of example dicts (output of parse_iob2).
+        tokenizer:   HuggingFace tokenizer.
+        max_seq_len: maximum subword sequence length (longer examples are truncated).
+        batch_size:  number of examples per batch.
+        device:      unused; kept for call-site symmetry with training loaders.
+    Returns:
+        Tuple of (DataLoader, n_truncated) where n_truncated is the number of
+        examples whose word-level coverage was cut by truncation.
+    """
     ds, n_trunc = prepare_split(examples, tokenizer, max_seq_len,
                                 return_truncation_count=True)
     loader = make_dataloader(ds, tokenizer, batch_size, shuffle=False)
     return loader, n_trunc
 
 
-def _print_truncation(name: str, examples, n_trunc: int, unit: str):
+def _print_truncation(name: str, examples, n_trunc: int, unit: str) -> None:
+    """
+    Print truncation statistics and warn if >10% of paragraph examples were cut.
+
+    Args:
+        name:    human-readable split label for the log line.
+        examples: list of raw example dicts (used for total-count denominator).
+        n_trunc:  number of examples truncated (from prepare_split).
+        unit:     "sentence" or "paragraph"; >10% warning only fires for paragraphs.
+    """
     n = len(examples)
     pct = (n_trunc / n * 100) if n else 0.0
     print(f"  {name:<22} truncated: {n_trunc}/{n} ({pct:.1f}%)")
@@ -93,6 +126,15 @@ def _print_truncation(name: str, examples, n_trunc: int, unit: str):
 
 
 def _trainer_args(cfg: ExperimentConfig, output_dir: str) -> SimpleNamespace:
+    """
+    Build the SimpleNamespace of trainer hyperparameters expected by trainer.train().
+
+    Args:
+        cfg:        loaded ExperimentConfig.
+        output_dir: directory passed as args.output_dir (used for checkpoint paths).
+    Returns:
+        SimpleNamespace with fields: lr, weight_decay, warmup_ratio, epochs, output_dir.
+    """
     return SimpleNamespace(
         lr=cfg.learning_rate,
         weight_decay=cfg.weight_decay,
@@ -102,7 +144,14 @@ def _trainer_args(cfg: ExperimentConfig, output_dir: str) -> SimpleNamespace:
     )
 
 
-def main():
+def main() -> None:
+    """
+    Entry point for the iterative cross-domain injection experiment.
+
+    Reads a YAML config, iterates over seeds × injection schedule, trains a fresh
+    BERT model per iteration, evaluates on all eval sets, and writes per-iteration
+    artifacts plus a cumulative summary.csv.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--device", default="cuda")

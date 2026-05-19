@@ -34,8 +34,12 @@ def _bio_collapsed_types() -> List[str]:
     return sorted(types)
 
 
+# All unique entity types derived from LABEL_LIST after BIO collapse, used to
+# generate per-type f1_<type> and support_<type> columns in summary.csv.
 ENTITY_TYPES = _bio_collapsed_types()
 
+# Ordered column schema for summary.csv; every row written by append_summary_row
+# follows this exact order. Add new metrics here to extend the schema.
 SUMMARY_COLUMNS: List[str] = [
     "exp_name", "seed", "iteration",
     "n_blocks", "n_target_examples", "n_source_examples", "train_set_size",
@@ -53,7 +57,8 @@ SUMMARY_COLUMNS: List[str] = [
 
 # --- atomic JSON / text writers ---------------------------------------------
 
-def _atomic_write(path: str, data: str):
+def _atomic_write(path: str, data: str) -> None:
+    """Write data to path via a .tmp file + os.replace to avoid partial writes."""
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
@@ -61,11 +66,19 @@ def _atomic_write(path: str, data: str):
     os.replace(tmp, path)
 
 
-def write_json(path: str, obj: Any):
+def write_json(path: str, obj: Any) -> None:
+    """Atomically serialise obj as pretty-printed JSON to path."""
     _atomic_write(path, json.dumps(obj, indent=2, default=str))
 
 
-def write_jsonl(path: str, records: Iterable[Dict]):
+def write_jsonl(path: str, records: Iterable[Dict]) -> None:
+    """
+    Atomically write one JSON object per line to path.
+
+    Args:
+        path:    destination file path.
+        records: iterable of dicts, each serialised as one JSON line.
+    """
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
@@ -74,16 +87,28 @@ def write_jsonl(path: str, records: Iterable[Dict]):
     os.replace(tmp, path)
 
 
-def write_text(path: str, text: str):
+def write_text(path: str, text: str) -> None:
+    """Atomically write a plain text string to path."""
     _atomic_write(path, text)
 
 
 # --- summary.csv -------------------------------------------------------------
 
-def append_summary_row(summary_csv_path: str, row: Dict[str, Any]):
+def append_summary_row(summary_csv_path: str, row: Dict[str, Any]) -> None:
     """
-    Append `row` to summary.csv via tmp-rename. Header is written on first call.
-    Missing keys are written as empty cells. Unknown keys are ignored.
+    Append one row to summary.csv using an atomic read → append → write pattern.
+
+    The atomic rewrite pattern: existing rows are read into memory, the new row
+    is appended in-process, the full CSV is written to a .tmp file, and then
+    os.replace() swaps it into place. This ensures a crash mid-write never
+    leaves a partially written CSV on disk.
+
+    The header row is written on the first call (when the file does not yet exist).
+    Missing keys in row are written as empty cells. Unknown keys are ignored.
+
+    Args:
+        summary_csv_path: path to the target summary.csv file.
+        row:              dict keyed by SUMMARY_COLUMNS field names.
     """
     os.makedirs(os.path.dirname(summary_csv_path) or ".", exist_ok=True)
 
@@ -108,10 +133,24 @@ def append_summary_row(summary_csv_path: str, row: Dict[str, Any]):
 # --- per-run directories -----------------------------------------------------
 
 def run_root(output_dir: str, exp_name: str) -> Path:
+    """Return the top-level directory for a named experiment run."""
     return Path(output_dir) / exp_name
 
 
 def init_iter_dir(output_dir: str, exp_name: str, seed: int, iter_idx: int) -> Path:
+    """
+    Create and return the per-iteration artifact directory.
+
+    Path pattern: <output_dir>/<exp_name>/seeds/seed_<seed>/iter_<iter_idx:03d>/
+
+    Args:
+        output_dir: root output directory.
+        exp_name:   experiment name (used as subdirectory).
+        seed:       integer seed for this run.
+        iter_idx:   zero-based iteration index.
+    Returns:
+        Path object pointing to the created directory.
+    """
     p = (run_root(output_dir, exp_name)
          / "seeds" / f"seed_{seed}"
          / f"iter_{iter_idx:03d}")
@@ -120,6 +159,16 @@ def init_iter_dir(output_dir: str, exp_name: str, seed: int, iter_idx: int) -> P
 
 
 def init_seed_dir(output_dir: str, exp_name: str, seed: int) -> Path:
+    """
+    Create and return the per-seed directory (parent of all iter_* directories).
+
+    Args:
+        output_dir: root output directory.
+        exp_name:   experiment name.
+        seed:       integer seed for this run.
+    Returns:
+        Path object pointing to the created directory.
+    """
     p = run_root(output_dir, exp_name) / "seeds" / f"seed_{seed}"
     p.mkdir(parents=True, exist_ok=True)
     return p
@@ -130,6 +179,16 @@ def init_seed_dir(output_dir: str, exp_name: str, seed: int) -> Path:
 def write_config_snapshot(out_path: str, *,
                           cfg_dict: Dict, dataset_hashes: Dict[str, str],
                           git_commit: str, tokenizer) -> None:
+    """
+    Write a reproducibility snapshot (config + hashes + environment) as JSON.
+
+    Args:
+        out_path:       destination path for the JSON file.
+        cfg_dict:       experiment config serialised to a plain dict.
+        dataset_hashes: mapping of logical path key → SHA-256 hex digest.
+        git_commit:     HEAD commit hash from git_commit_hash().
+        tokenizer:      HuggingFace tokenizer instance (class name and path recorded).
+    """
     snapshot = {
         "config":          cfg_dict,
         "git_commit":      git_commit,
@@ -175,6 +234,27 @@ def build_summary_row(*, exp_name: str, seed: int, iteration: int,
                       n_source_examples: int,
                       block_size: int,
                       delta_f1_vs_iter0: float) -> Dict[str, Any]:
+    """
+    Assemble a summary.csv row dict from per-iteration results.
+
+    Args:
+        exp_name:           experiment identifier string.
+        seed:               integer random seed for this run.
+        iteration:          zero-based injection iteration index.
+        n_target_examples:  number of target examples in the training mix.
+        target_fraction:    n_target / (n_source + n_target).
+        eval_set:           name of the evaluation dataset (e.g. "astro_test").
+        eval_metrics:       metrics dict from full_evaluate.
+        per_type:           per-entity-type dict from seqeval classification_report.
+        train_time_sec:     wall-clock training time in seconds.
+        best_epoch:         epoch at which the best dev F1 was achieved.
+        peak_gpu_mem_mb:    peak GPU memory usage in megabytes.
+        n_source_examples:  number of source examples in the training mix.
+        block_size:         injection block size (from ExperimentConfig.block_size).
+        delta_f1_vs_iter0:  F1 change relative to iteration 0 for this eval set.
+    Returns:
+        Dict with keys matching SUMMARY_COLUMNS, ready to pass to append_summary_row.
+    """
     row: Dict[str, Any] = {
         "exp_name":           exp_name,
         "seed":               seed,

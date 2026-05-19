@@ -1,16 +1,32 @@
+"""
+baseline_main_v1.py — Single-run cross-domain NER baseline entry point.
+
+Trains on EWT, evaluates on EWT / CoNLL / WIESP dev sets, and writes EWT test
+predictions to file for LearnIT submission. Superseded by scripts/run_baselines.py
+for multi-seed, multi-dataset experiments.
+"""
+
+# NOTE: Legacy single-run entry point. Superseded by scripts/run_baselines.py,
+# which uses the same summary.csv schema, supports multiple seeds, and integrates
+# with the YAML experiment config. Use this file for quick one-off checks only.
+
 import os
 import torch
-from transformers import AutoModelForTokenClassification, AutoTokenizer, set_seed
+from transformers import AutoModelForTokenClassification, AutoTokenizer
 
 from config import get_args
 from data import load_all_datasets, prepare_split, make_dataloader, save_predictions
 from model import build_model
 from trainer import set_seed as seed_everything, train, evaluate
-from seqeval.metrics import precision_score, recall_score, f1_score
-from config import ID2LABEL
 
 
-def print_results_table(results: dict):
+def print_results_table(results: dict) -> None:
+    """
+    Print a formatted table of F1, Precision, and Recall for each evaluated split.
+
+    Args:
+        results: dict mapping split name to metrics dict (keys: f1, precision, recall).
+    """
     print("\n" + "=" * 60)
     print(f"{'Split':<30} {'F1':>7} {'Precision':>10} {'Recall':>8}")
     print("=" * 60)
@@ -25,7 +41,11 @@ def print_results_table(results: dict):
     print("=" * 60)
 
 
-def main():
+def main() -> None:
+    """
+    End-to-end single-seed baseline: load data, train on EWT, evaluate cross-domain,
+    and save EWT test predictions.
+    """
     args = get_args()
 
     # ── Setup ─────────────────────────────────────────────────────────────────

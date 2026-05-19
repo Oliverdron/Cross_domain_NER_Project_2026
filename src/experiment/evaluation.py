@@ -15,12 +15,32 @@ from trainer import evaluate as trainer_evaluate
 
 
 def _bio_collapse(label: str) -> str:
+    """
+    Strip the BIO prefix from a label, merging B- and I- tags into a single type.
+
+    BIO collapsing means that "B-PER" and "I-PER" both become "PER", so a
+    token-level confusion matrix groups all tokens of the same entity type
+    together regardless of whether they start or continue a span.
+
+    Args:
+        label: BIO label string such as "B-PER", "I-LOC", or "O".
+    Returns:
+        Entity type string ("PER", "LOC", etc.) or "O" for non-entities.
+    """
     if label == "O":
         return "O"
     return label.split("-", 1)[1] if "-" in label else label
 
 
-def collapsed_label_set(labels_seqs) -> List[str]:
+def collapsed_label_set(labels_seqs: List[List[str]]) -> List[str]:
+    """
+    Return a sorted list of unique BIO-collapsed entity types seen in labels_seqs.
+
+    Args:
+        labels_seqs: list of BIO label sequences (list of lists of strings).
+    Returns:
+        Sorted list of collapsed type strings (e.g. ["LOC", "O", "PER"]).
+    """
     seen = set()
     for seq in labels_seqs:
         for l in seq:
@@ -57,6 +77,9 @@ def full_evaluate(model, dataloader, device, eval_set_name: str,
                             average="macro", zero_division=0)
 
     # predictions JSONL records
+    # The zip below relies on example_ids / example_tokens being in the same order
+    # as the dataloader's examples (i.e. the underlying Dataset must NOT have been
+    # shuffled — shuffle=False is enforced in _build_eval_loader).
     pred_records: List[Dict] = []
     for i, (ex_id, toks, g_tags, p_tags, g_spans, p_spans, mp) in enumerate(zip(
         example_ids, example_tokens, gold_seqs, pred_seqs,

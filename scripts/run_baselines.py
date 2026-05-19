@@ -15,7 +15,6 @@ The script does not run automatically on import.
 """
 
 import argparse
-import math
 import os
 import shutil
 import sys
@@ -53,9 +52,7 @@ from src.experiment.logging_io import (
 
 # --- baseline specs ---------------------------------------------------------
 
-#
-# Hyperparameters MUST match experiments/config_conll.yaml + config_astro.yaml
-# (max_seq_len=512, batch_size=32) for fair comparison with the iterative runs.
+# Hyperparameters MUST match experiments/config_conll.yaml + config_astro.yaml for fair comparison with the iterative runs.
 BASELINES: Dict[str, Dict] = {
     "ewt_only": {
         "train_path": "data/universal_train.iob2",
@@ -96,9 +93,7 @@ EVAL_SETS: List[Dict] = [
 
 # --- shared training defaults ----------------------------------------------
 
-# Hyperparameters MUST match experiments/config_conll.yaml + config_astro.yaml
-# (num_epochs=300, early_stopping_patience=8) for fair comparison with the
-# iterative runs.
+# Hyperparameters MUST match experiments/config_conll.yaml + config_astro.yaml for fair comparison with the iterative runs.
 DEFAULTS = SimpleNamespace(
     model_name="google-bert/bert-base-cased",
     tokenizer_name="google-bert/bert-base-cased",
@@ -110,11 +105,33 @@ DEFAULTS = SimpleNamespace(
 )
 
 
-def _load(path, token_col, tag_col, unit):
+def _load(path: str, token_col: int, tag_col: int, unit: str) -> List[Dict]:
+    """
+    Parse a single IOB2 file with explicit column indices.
+
+    Args:
+        path:      path to the .iob2 file.
+        token_col: column index for the token.
+        tag_col:   column index for the NER tag.
+        unit:      "sentence" or "paragraph".
+    Returns:
+        List of example dicts as returned by parse_iob2.
+    """
     return parse_iob2(path, token_col=token_col, tag_col=tag_col, unit=unit)
 
 
-def _build_eval_loader(examples, tokenizer, max_seq_len, batch_size):
+def _build_eval_loader(examples, tokenizer, max_seq_len: int, batch_size: int):
+    """
+    Tokenise examples and return an unshuffled DataLoader plus the truncation count.
+
+    Args:
+        examples:    list of example dicts (output of parse_iob2).
+        tokenizer:   HuggingFace tokenizer.
+        max_seq_len: maximum subword sequence length.
+        batch_size:  number of examples per batch.
+    Returns:
+        Tuple of (DataLoader, n_truncated).
+    """
     ds, n_trunc = prepare_split(examples, tokenizer, max_seq_len,
                                 return_truncation_count=True)
     return make_dataloader(ds, tokenizer, batch_size, shuffle=False), n_trunc
@@ -122,7 +139,21 @@ def _build_eval_loader(examples, tokenizer, max_seq_len, batch_size):
 
 def run_one_baseline(name: str, spec: Dict, seeds: List[int],
                      output_dir: str, device: torch.device,
-                     debug: bool = False):
+                     debug: bool = False) -> None:
+    """
+    Train and evaluate a single-domain baseline across all requested seeds.
+
+    Writes per-seed artifacts to runs/baselines/<name>/seeds/seed_<s>/iter_000/ and
+    appends one row per eval set to runs/baselines/<name>/summary.csv.
+
+    Args:
+        name:       baseline key from BASELINES (e.g. "ewt_only").
+        spec:       baseline spec dict (train_path, dev_path, ds_name, unit, etc.).
+        seeds:      list of integer seeds to train under.
+        output_dir: root output directory (default "runs").
+        device:     torch device to train on.
+        debug:      if True, subsample data to 0.1% for smoke-testing.
+    """
     print(f"\n══════════ baseline: {name} ══════════")
 
     tokenizer = AutoTokenizer.from_pretrained(DEFAULTS.tokenizer_name, use_fast=True)
@@ -273,7 +304,12 @@ def run_one_baseline(name: str, spec: Dict, seeds: List[int],
 
 
 
-def main():
+def main() -> None:
+    """
+    CLI entry point: run one or more single-domain baselines across multiple seeds.
+
+    Dispatches to run_one_baseline for each requested baseline name.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--baselines", nargs="+",
                         default=list(BASELINES.keys()),
@@ -285,7 +321,7 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        print("⚠️  DEBUG MODE: using 0.1% of data, 1 seed, 5 iterations max. Do not use for real experiments.")
+        print("DEBUG MODE: using 0.1% of data, 1 seed, 5 iterations max. Do not use for real experiments.")
         args.seeds = [42]
 
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")

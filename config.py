@@ -1,3 +1,10 @@
+"""
+config.py — Global label vocabulary and CLI argument parser for cross-domain NER.
+
+Exports: LABEL_LIST, LABEL2ID, ID2LABEL (unified 51-label schema), and get_args()
+for the single-run baseline entry point (baseline_main_v1.py).
+"""
+
 import argparse
 
 
@@ -42,7 +49,15 @@ LABEL2ID   = {l: i for i, l in enumerate(LABEL_LIST)}
 ID2LABEL   = {i: l for i, l in enumerate(LABEL_LIST)}
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
+    """
+    Parse and return CLI arguments for the single-run baseline (baseline_main_v1.py).
+
+    Returns:
+        Namespace with fields: data_dir, output_dir, model_name, epochs,
+        batch_size, max_length, lr, weight_decay, warmup_ratio, final_eval,
+        seed, device.
+    """
     parser = argparse.ArgumentParser(description="Cross-domain NER baseline")
 
     # ── Paths ──────────────────────────────────────────────────────────────────
