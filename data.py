@@ -32,7 +32,7 @@ def normalize_tag(tag: str) -> str:
     Normalize a NER tag to the unified label set.
     Rules (in order):
       1. Unify overlapping labels (WIESP Person/Organization/Location --> PER/ORG/LOC)
-      2. Map MISC --> O (CoNLL-specific, no equivalent in EWT or WIESP)
+      2. Map MISC --> O (CoNLL-specific for mixed entities, outside our scope)
       3. If the tag is in the label set --> keep as-is
       4. Anything else --> O
     """

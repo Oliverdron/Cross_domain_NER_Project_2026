@@ -289,7 +289,7 @@ def run_one_baseline(name: str, spec: Dict, seeds: List[int],
                 seed=seed,
                 iteration=0,
                 n_target_examples=0,
-                target_fraction="",        # NaN-equivalent
+                target_fraction="", 
                 eval_set=ev,
                 eval_metrics=m,
                 per_type=m["per_type"],
@@ -321,7 +321,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.debug:
-        print("DEBUG MODE: using 0.1% of data, 1 seed, 5 iterations max. Do not use for real experiments.")
+        print("DEBUG MODE: using 0.1 percent of data, 1 seed, 5 iterations max. Do not use for real experiments.")
         args.seeds = [42]
 
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")

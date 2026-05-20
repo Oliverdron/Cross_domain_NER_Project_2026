@@ -2,8 +2,7 @@
 Atomic file writers for experiment outputs.
 
 Every writer goes through a tmp-file + os.replace so a crash mid-write never
-leaves partial data on disk. summary.csv is append-only (read existing rows,
-append, atomic-replace).
+leaves partial data on disk. summary.csv is append-only (read existing rows, append, atomic-replace).
 """
 
 import csv

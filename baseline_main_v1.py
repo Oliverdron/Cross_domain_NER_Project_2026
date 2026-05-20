@@ -6,10 +6,6 @@ predictions to file for LearnIT submission. Superseded by scripts/run_baselines.
 for multi-seed, multi-dataset experiments.
 """
 
-# NOTE: Legacy single-run entry point. Superseded by scripts/run_baselines.py,
-# which uses the same summary.csv schema, supports multiple seeds, and integrates
-# with the YAML experiment config. Use this file for quick one-off checks only.
-
 import os
 import torch
 from transformers import AutoModelForTokenClassification, AutoTokenizer

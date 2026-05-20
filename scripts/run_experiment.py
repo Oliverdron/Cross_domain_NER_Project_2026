@@ -4,8 +4,7 @@ Iterative cross-domain NER experiment runner.
 Usage:
     python scripts/run_experiment.py --config experiments/config_conll.yaml
 
-The script does not run automatically on import. Training only starts when
-this file is executed as __main__.
+The script does not run automatically on import. Training only starts when this file is executed as __main__.
 """
 
 import argparse
